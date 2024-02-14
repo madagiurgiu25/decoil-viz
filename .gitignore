@@ -1,3 +1,4 @@
 /**/*.bw
 /**/__pycache__
 *.idea
+/**/decoilviz.egg-info
