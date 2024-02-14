@@ -1,0 +1,20 @@
+FROM rocker/tidyverse:4.1.1
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV R_BASE_VERSION 4.1.1
+
+ARG VERSION_BASE
+LABEL "decoil-base"=${VERSION_BASE}
+LABEL "desc"="create R environment for decoil"
+
+RUN apt-get update \
+	&& apt-get install -y --no-install-recommends build-essential make gcc \
+    && apt-get install -y --no-install-recommends libssl-dev git libbz2-dev \
+    && apt-get install -y --no-install-recommends libcurl4-openssl-dev libssl-dev libssh2-1-dev libxml2-dev zlib1g-dev
+
+# clone repository version
+COPY requirements.R .
+RUN Rscript requirements.R
+
+RUN Rscript --version && echo ${R_BASE_VERSION}
+CMD ["/bin/bash"]

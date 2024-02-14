@@ -1,0 +1,551 @@
+---
+title: "Decoil reconstruction results"
+output:
+  # pdf_document:
+  #   toc: true
+  #   toc_depth: 2
+  #   df_print: kable
+  # prettydoc::html_pretty:
+  #   theme: cayman
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+    keep_md: yes
+params:
+  # root: "/examples/ecnda1"
+  # rootreal: "/examples/ecdna1"
+  rootimg: "reconstruct/"
+  # nodefile: "reconstruct.bed"
+  # edgesfile: "reconstruct.links.txt"
+  # summaryfile: "summary.txt"
+  # bw: "/examples/ecdna1/coverage.bw"
+  # fname: "reconstruct.test.html"
+  # sample: "test"
+  # maxcov: 600
+  # refgenome: "/annotation/reference.fa"
+  # gtffile: "/annotation/anno.gtf"
+  # genesfile: "/decoil/decoil/../annotation/genes.txt"
+  root: "/Users/madag/Projects/PhD/github/decoil-build/test_plot/"
+  rootreal: "/Users/madag/Projects/PhD/github/decoil/examples/ecdna1/"
+  # root: "/Users/madag/Projects/PhD/github/decoil-build/test/"
+  nodefile: "reconstruct.bed"
+  edgesfile: "reconstruct.links.txt"
+  summaryfile: "summary.txt"
+  bw: "/Users/madag/Projects/PhD/github/decoil-build/test_plot/coverage.bw"
+  fname: "/Users/madag/Projects/PhD/github/decoil-build/test_plot/reconstruct.html"
+  sample: "ecdna1"
+  maxcov: 100
+  refgenome: "/Users/madag/Projects/PhD/reference/GRCh38.primary_assembly.genome.fa"
+  gtffile: "/Users/madag/Projects/PhD/annotation/gencode.v42.primary_assembly.basic.annotation.gtf"
+  genesfile: "/Users/madag/Projects/PhD/github/decoil/annotation/genes.txt"
+  # window: "/Users/madag/Projects/PhD/github/decoil-build/test_plot/window.bed"
+  window: ""
+  decoilversion: "1.1.2"
+  filtertop: ""
+  filterscore: ""
+fontsize: 9pt
+graphics: yes
+
+---
+
+```{css toc-content, echo = FALSE}
+#TOC {
+  background-color: #165d92;
+  margin-top: 200px;
+}
+
+.level3 {
+  margin: 1%;
+  padding-top: 20px;
+  padding-left: 300px;
+}
+
+.toc-content {
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 20px;
+    margin-bottom: 30px;
+    font-weight: 400;
+    color: #165d92;
+}
+
+.title {
+    display: inline-block;
+    width: 110%;
+    color: #fff;
+    margin:0;
+    text-align: center;
+    background-color: #159957;
+    background-image: linear-gradient(120deg,#155799,#159957);
+    padding: 50px;
+}
+
+.main-container {
+
+    padding: 0px;
+    width: 90%;
+    margin: auto;
+    max-width: 2000px;
+}
+
+```
+
+
+```{r setup, echo=FALSE, include=FALSE, message = FALSE, warning=FALSE}
+knitr::opts_chunk$set(ev = "png",
+                      dpi = 600,
+                      echo = FALSE,
+                      cache = TRUE,
+                      fig.width=7,
+                      out.width="100%")
+# install.packages("prettydoc")
+# install.packages("BiocManager")
+# library(BiocManager)
+# install("ggbio")
+# BiocManager::install('plyranges')
+library(rtracklayer)
+library(pafr)
+# library(ggplot2)
+# library(gridExtra)
+library(gTrack)
+library(gGnome)
+library(GenomicRanges)
+library(dplyr)
+# library(parallel)
+library(rmarkdown)
+library(knitr)
+library(kableExtra)
+# library(pander)
+# library(ggbio)
+library(Gviz)
+library(plyranges)
+library(assertthat)
+library(DT)
+
+root <- params$root
+rootimg <- params$rootimg
+# the path outside the container, i.e. on host
+rootreal <- params$rootreal
+
+dir.create(file.path(root))
+dir.create(file.path(paste0(rootreal,rootimg)))
+
+nodesfile <- paste0(root,params$nodefile)
+edgesfile <- paste0(root, params$edgesfile)
+summfile <- paste0(root, params$summaryfile)
+bwfile <- params$bw
+sample <- params$sample
+maxcov <- params$maxcov
+htmlfile <- params$fname
+
+decoilversion <- params$decoilversion
+refgenome <- params$refgenome
+gtffile <- params$gtffile
+genes <- params$genesfile
+windowfile <- params$window
+
+filtertop <- params$filtertop
+filterscore <- params$filterscore
+
+sc = "#171717"
+sv = "#226258"
+msv = "#3D2C2E"
+mic = "#F4D35E"
+mrinter = "#E4644E"
+sdup = "#13908E"
+fb = "#613C68"
+
+colors <- c(sc, sv, msv, mic, mrinter, sdup, fb)
+corder = c("Simple circle", "Simple SV's", "Mixed SV's", "Multi-region intra-chromosomal", 
+          "Multi-region inter-chromosomal","Simple duplications","Foldbacks")
+
+```
+
+### Configuration
+
+>**Date**: `r Sys.Date()` <br/>
+>**Decoil version**: `r decoilversion`
+
+>**Reference genome**: `r refgenome` <br/>
+>**GTF annotation file**: `r gtffile` <br/>
+>**Gene list**: `r genes` 
+
+>**Sample name**: `r sample` <br/>
+>**Genomic regions**: `r paste0(rootreal,nodesfile)` <br/>
+>**Breakpoints information**: `r paste0(rootreal,edgesfile)` <br/>
+>**Coverage track**: `r bwfile` <br/>
+>**ROI (region of interest)**: `r windowfile` <br/>
+>**Output**: `r htmlfile`
+<br/>
+
+```{r assert_paths, echo=FALSE, message = FALSE, warning=FALSE, results='asis', cache = FALSE}
+
+# check paths
+library(assertthat)
+assert_that(file.exists(edgesfile), msg = paste0("edges file exists", edgesfile))
+assert_that(file.exists(nodesfile), msg = paste0("nodes file exists", nodesfile))
+assert_that(file.exists(summfile), msg = paste0("summary file exists", summfile))
+assert_that(file.exists(bwfile), msg = paste0("coverage file exists", bwfile))
+assert_that(file.exists(refgenome), msg = paste0("refgenome file exists", refgenome))
+assert_that(file.exists(gtffile), msg = paste0("gtffile file exists", gtffile))
+
+# if window file specified please check length
+if (length(windowfile) > 1){
+  assert_that(file.exists(windowfile), msg = paste0("window file exists", windowfile))
+}
+
+# check if data available
+ed1<-readLines(edgesfile)
+if (length(ed1) < 2){
+  rtext <- kableExtra::text_spec("No ecDNA elements / cycles found", "html", bold = TRUE, color = "red", font_size = 20)
+  knitr::knit_exit()
+}else{
+  df_edges <- read.csv2(edgesfile,header=T,sep="\t")
+  if (dim(df_edges)[1] == 0){
+    rtext <- kableExtra::text_spec("No ecDNA elements / cycles found", "html", bold = TRUE, color = "red", font_size = 20)
+    cat(rtext)
+    knitr::knit_exit()
+  }
+}
+
+
+```
+
+```{r load_annotation, echo=FALSE, message = FALSE, warning=FALSE, cache = FALSE}
+#### 1. Load genome annotation 
+
+# import gtf
+gr <- rtracklayer::import(gtffile)
+
+# create the track.gencode plot
+primary_chromosomes <- c("chr1", "chr2", "chr3", "chr4", "chr5", "chr6", "chr7", "chr8",
+                         "chr9", "chr10", "chr11", "chr12", "chr13", "chr14", "chr15", "chr16",
+                         "chr17", "chr18", "chr19", "chr20", "chr21", "chr22", "chrX", "chrY", "chrM", "MT", "M",
+                         "X", "Y","1", "2", "3", "4", "5", "6", "7", "9", "10", "11", "12",
+                         "13", "14", "15", "16", "17", "18", "19", "20", "21", "22")
+
+filtered_gr <- plyranges::filter(gr, seqnames %in% primary_chromosomes &
+                        gene_name %in% read.csv2(genes,header=F,"\t")$V1 &
+                        type %in% c('gene'))
+
+
+keep <- !is.na(mcols(filtered_gr)$gene_id)
+filtered_gr <- filtered_gr[keep,]
+
+alllevels <- seqlevels(filtered_gr)
+filteredlevels <- alllevels[alllevels %in% primary_chromosomes]
+seqlevels(filtered_gr) <- filteredlevels
+
+gencode = gTrack(filtered_gr, name = 'Gencode', gr.labelfield = 'gene_name', grl.labelfield = 'gene_name', height = 90, stack.gap = 1e+06, col=alpha('#159957', .5), xaxis.round = NA, circles = FALSE)
+
+# gencode = gTrack(filtered_gr, name = 'Gencode', gr.labelfield = 'gene_name', grl.labelfield = 'gene_name', gr.cex.label = 2, height = 90, stack.gap = 1e+06, xaxis.unit = 5, grl.colorfield = 'yellow', sep.bg.col = 'white', path.col = "yellow", gr.srt.label = 2, col=alpha('#159957', .5))
+
+# gencode <- track.gencode(gencode = filtered_gr, stack.gap = 1e+06, cex.label = 0.6, height = 90, cached = FALSE, build = NULL,
+#                         name = 'Gencode', labels.suppress.gr=T, gene.collapse = T,
+#                         genes=read.csv2(genes,header=F,"\t")$V1,
+#                         bg.col = alpha("black", 1),
+#                         cds.col = alpha("black", 0),
+#                         utr.col = alpha("black",0),
+#                         st.col = alpha("black",0),
+#                         en.col = alpha("black",0))
+
+```
+
+
+```{r read_nodes_edges, echo=TRUE, include=FALSE, message = FALSE, warning=FALSE}
+#### 2. Read nodes
+setwd(root)
+
+df_nodes <- read.csv2(nodesfile,header=T,sep="\t")
+gr_nodes <- makeGRangesFromDataFrame(df_nodes,
+                                     keep.extra.columns=TRUE,
+                                     ignore.strand=FALSE,
+                                     seqinfo=NULL,
+                                     seqnames.field=c("X.chr","seqnames", "seqname",
+                                                      "chromosome", "chrom",
+                                                      "chr", "chromosome_name",
+                                                      "seqid"),
+                                     start.field="start",
+                                     end.field=c("end", "stop"),
+                                     strand.field="strand",
+                                     starts.in.df.are.0based=FALSE)
+
+#### 2.1 Create gencode gTrack
+# inter_gr <- GenomicRanges::intersect(filtered_gr, gr_nodes)
+# gencode = gTrack(filtered_gr, name = 'Gencode', gr.labelfield = 'gene_name', gr.cex.label = 'gene_name')
+
+#### 3. Read edges
+df_edges <- read.csv2(edgesfile,header=T,sep="\t")
+
+#### 3.1 Max coverage
+if (!is.na(maxcov) && maxcov != "" && (maxcov)>0){
+  maxcov <- max(maxcov, 2*max(df_nodes$coverage))
+}else{
+  maxcov <- 2*max(df_nodes$coverage)
+}
+
+### 3.2 Read summary
+df_summary <- read.csv2(summfile,header=T,sep="\t")
+
+### 3.3 Filtered data
+
+# # filter nodes top X set
+# if (filtertop != ''){
+#   circ_list <- unique(df_nodes$circ_id)
+#   circ_short_list <- circ_list[1:as.numeric(filtertop)]
+#   print(circ_short_list)
+#   df_nodes <- df_nodes[df_nodes$circ_id %in% circ_short_list,]
+#   # df_summary <- df_summary[df_summary$circ_id %in% circ_short_list,]
+#   df_edges <- df_edges[df_edges$circ_id %in% circ_short_list,]
+# }
+# 
+# # filter nodes with a score
+# if (filterscore != ''){
+#   df_nodes <- df_nodes[df_nodes$estimated_proportions >= as.numeric(filterscore),]
+#   # df_summary <- df_summary[df_summary$estimated_proportions >= filterscore,]
+#   circ_list <- unique(df_nodes$circ_id)
+#   df_edges <- df_edges[df_edges$circ_id %in% circ_list,]
+# }
+# 
+# print(df_nodes)
+```
+
+
+### Reconstruction of the invidiual ecDNA elements
+<br/>
+
+We display here the individual ecDNA elements.<br/>
+The visualization contains from top to bottom the following tracks:<br/>
+
+- **Circ_id**: 
+  - thread reconstruction, where the fragments are marked black and the connecting breakpoints red
+  - track name is the id of the ecDNA element (found in the table as the circ_id)
+- **Coverage**: coverage profile of all the reads aligning to the reference genome
+- **Gencode**: gene annotation (includes only protein-coding genes)
+
+```{r draw_amplicons_function, echo=FALSE, warning=FALSE,  fig.height=6, results='asis', out.width="100%"}
+
+get_gradient <- function(start,end){
+  colfunc <- colorRampPalette(c("gray", "black"))
+  return(colfunc(end-start))
+}
+
+draw_legend_topology <- function(){
+  # plot.new()
+  legend("topright", legend = corder, col = colors, lty = 1, lwd = 5)
+}
+
+#### 4. Draw circles
+draw_amplicon <- function(s, bwpath, maxcov, df_edges, gr_nodes, df_summary, windowfile){
+
+  gg_all <- c()
+  plots_all <- c()
+  gRangesCov <- import(bwpath)
+  gTrackCov <- gTrack(gRangesCov,
+                      y.field="score",
+                      line=TRUE,
+                      name = "Coverage",
+                      y0=0,
+                      y1=maxcov,
+                      height=60)
+
+  individual_circles <- unique(df_edges$circ_id)
+  max_proportion <- max(df_summary[df_summary$label == "ecDNA",]$estimated_proportions)
+  min_proportion <- min(df_summary[df_summary$label == "ecDNA",]$estimated_proportions)
+
+  current_nrnodes <- 0
+  for( circ in individual_circles){
+
+    nodes1 <- gr_nodes[(elementMetadata(gr_nodes)[, "circ_id"] == circ)]
+    circ_ep <- df_summary[df_summary$circ_id==circ,]$estimated_proportions
+    
+    gradient_palette <- get_gradient(min_proportion, max_proportion)
+    nodes1$col <- alpha(gradient_palette[circ_ep-min_proportion+1], .7)
+    
+    edges1 <- df_edges[df_edges$circ_id==circ,]
+    edge_color <- df_summary[df_summary$circ_id==circ,]$topology_idx
+    edges1$col <- alpha(colors[edge_color+1], .8)
+    
+    fcirc <- paste0(rootreal,rootimg, circ, ".pdf")
+
+    cat("Reconstruction for sample:",s,"<br/>")
+    cat("EcDNA element: circ_id =", circ, "<br/>")
+    # cat("<a href=\"", fcirc,"\">Download circ_id =",circ,"</a></br/>")
+    # cat("Estimated proportions: ", nodes1$estimated_proportions[1,], "<br/>")
+
+    # reset nodes numbering
+    rownames(edges1) <- NULL
+    edges1$n1 <- edges1$n1 - current_nrnodes
+    edges1$n2 <- edges1$n2 - current_nrnodes
+
+    gg1 = gG(nodes = nodes1,
+             edges = edges1,
+             meta = list(sep.bg.col=alpha("white",0)))
+
+    # adjust the hight of the plot depending of the ecDNA complexity
+    if (dim(edges1)[1]<=2){
+      gg1$set(name = circ, height = 20)
+    }else{
+      gg1$set(name = circ, height = 50)
+    }
+
+    gt_temp <- gg1$gt
+    gt_temp$sep.bg.col <- NA
+    
+    # window interval specified
+    if (length(windowfile)>1){
+      windows <- rtracklayer::import(windowfile)
+      windows <- copy(windows) + 200000
+      windows <- reduce(windows)
+    }else{
+      windows <- copy(nodes1) + 200000
+      windows <- reduce(windows)
+    }
+    
+
+    if (length(gg_all) > 0){
+      gg_all <- c(gg_all, gt_temp)
+      plots_all <- c(plots_all, fcirc)
+    }else{
+      gg_all <- c(gt_temp)
+      plots_all <- c(fcirc)
+    }
+    current_nrnodes <- current_nrnodes + length(nodes1)
+
+    # plot as png
+    gTrack::plot.gTrack(c(gencode, gTrackCov, gt_temp),
+                        windows, sep.draw = FALSE)
+    
+    # plot as pdf
+    pdf(fcirc)
+    gTrack::plot.gTrack(c(gencode, gTrackCov, gt_temp),
+                        windows,sep.draw = FALSE)
+    dev.off()
+    
+    cat("<br/>")
+    
+  }
+
+  return(list("gplots"=gg_all, "plotsall"=plots_all))
+
+}
+
+```
+
+
+```{r draw_amplicons, echo=FALSE, warning=FALSE,  fig.height=6, results='asis', out.width="100%"}
+#### 5. Draw individuals 
+out <- draw_amplicon(sample, bwfile, maxcov, df_edges, gr_nodes, df_summary, windowfile)
+p1 <- out$gplots
+paths_plots <- out$plotsall
+```
+
+### Summary of all found ecDNA elements
+<br/>
+
+```{r draw_amplicons_summary, echo=FALSE, warning=FALSE,  fig.height=9, results='asis', out.width="100%"}
+if (length(windowfile)>1){
+  windows <- rtracklayer::import(windowfile)
+  windows <- copy(windows) + 200000
+  windows <- reduce(windows)
+}else{
+  windows <- copy(gr_nodes) + 200000
+  windows <- reduce(windows)
+}
+
+gRangesCov <- import(bwfile)
+gTrackCov <- gTrack(gRangesCov,
+                    y.field="score",
+                    line=TRUE,
+                    name = "Coverage",
+                    y0=0, y1=maxcov, height=70)
+
+# as pdf
+fcirc <- paste0(rootreal, rootimg, "all_ecdna_elements.pdf")
+paths_plots <- c(paths_plots, fcirc)
+
+pdf(fcirc)
+gTrack::plot.gTrack(c(gencode, gTrackCov,p1),
+                    windows,
+                    sep.draw = FALSE)
+draw_legend_topology()
+dev.off()
+
+# as png
+gTrack::plot.gTrack(c(gencode, gTrackCov,p1),
+                    windows,
+                    sep.draw = FALSE)
+draw_legend_topology()
+```
+
+#### Download as pdf:
+
+```{r show_links,  echo=FALSE, warning=FALSE,  fig.height=6, results='asis', out.width="100%"}
+for (pi in paths_plots){
+  cat("<a href=\"", pi,"\" target=\"_blank\">",pi,"</a></br/>")
+}
+```
+
+
+### Summary of found ecDNA elements / cycles
+<br/>
+
+We summarize below all the found ecDNA elements / cycles.<br/>
+Header description:<br/>
+
+- **circ_id** - id of the ecDNA element / cycle
+- **chr_origin** - chromosomes 
+- **size.MB** - sequence length of the ecDNA element / cycle
+- **label** - annotation; is the cycle an ecDNA element
+- **topology_idx** - index of the individual topology
+- **topology_name** - topology name 
+- **estimated_proportions** - copy-number estimates of the ecDNA element; the higher the more confident is the reconstruction
+
+```{r show_summary, echo=FALSE, out.width="100%", results='asis'}
+df_summary <- read.csv2(summfile,header=T,sep="\t") 
+df_intersect <- filter(df_summary, circ_id %in% df_nodes$circ_id)
+
+library(DT)
+datatable(df_intersect)
+```
+
+
+We summarize below all the fragments composing all the ecDNA elements / cycles.<br/>
+Header description:<br/>
+
+- **X.chr** - chromosome
+- **start** - start of contiguous genomic region composing the ecDNA element / cycle
+- **end** - end of contiguous genomic region composing the ecDNA element / cycle
+- **circ_id** - id of the ecDNA element / cycle
+- **fragment_id** - unique identifier concatenation of the genomic non-overlapping fragment(s) which describe a contiguous genomic region
+- **strand** - orientation of the contiguous genomic region
+- **coverage** - mean coverage over the contiguous genomic region
+- **estimated_proportions** - copy-number estimates of the ecDNA element / cycle; the higher the more confident is the reconstruction
+
+
+```{r show_summary_fragments, echo=FALSE, out.width="100%", results='asis'}
+# library(rmarkdown)
+# paged_table(df_nodes)
+library(DT)
+datatable(df_nodes)
+```
+
+###  ROI 
+Region of interest to display the reconstructions (showed only if parameter set)
+```{r show_target, echo=FALSE, out.width="100%", results='asis'}
+library(DT)
+if (length(windowfile)>1){
+  window <- read.csv(windowfile,sep="\t",header=T)
+  datatable(window)
+}
+```
+
+### R session information
+
+```{r}
+sessionInfo()
+```
