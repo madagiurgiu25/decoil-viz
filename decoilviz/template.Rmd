@@ -1,46 +1,26 @@
 ---
 title: "Decoil reconstruction results"
 output:
-  # pdf_document:
-  #   toc: true
-  #   toc_depth: 2
-  #   df_print: kable
-  # prettydoc::html_pretty:
-  #   theme: cayman
   html_document:
     toc: TRUE
     toc_float: TRUE
     keep_md: yes
 params:
-  # root: "/examples/ecnda1"
-  # rootreal: "/examples/ecdna1"
-  rootimg: "reconstruct/"
-  # nodefile: "reconstruct.bed"
-  # edgesfile: "reconstruct.links.txt"
-  # summaryfile: "summary.txt"
-  # bw: "/examples/ecdna1/coverage.bw"
-  # fname: "reconstruct.test.html"
-  # sample: "test"
-  # maxcov: 600
-  # refgenome: "/annotation/reference.fa"
-  # gtffile: "/annotation/anno.gtf"
-  # genesfile: "/decoil/decoil/../annotation/genes.txt"
-  root: "/Users/madag/Projects/PhD/github/decoil-build/test_plot/"
-  rootreal: "/Users/madag/Projects/PhD/github/decoil/examples/ecdna1/"
-  # root: "/Users/madag/Projects/PhD/github/decoil-build/test/"
-  nodefile: "reconstruct.bed"
-  edgesfile: "reconstruct.links.txt"
-  summaryfile: "summary.txt"
-  bw: "/Users/madag/Projects/PhD/github/decoil-build/test_plot/coverage.bw"
-  fname: "/Users/madag/Projects/PhD/github/decoil-build/test_plot/reconstruct.html"
-  sample: "ecdna1"
-  maxcov: 100
-  refgenome: "/Users/madag/Projects/PhD/reference/GRCh38.primary_assembly.genome.fa"
-  gtffile: "/Users/madag/Projects/PhD/annotation/gencode.v42.primary_assembly.basic.annotation.gtf"
-  genesfile: "/Users/madag/Projects/PhD/github/decoil/annotation/genes.txt"
-  # window: "/Users/madag/Projects/PhD/github/decoil-build/test_plot/window.bed"
+  help: false
+  maxcov: 600
+  full: TRUE
+  refgenome: "/anno/reference.fa"
+  gtffile: "/anno/anno.gtf"
+  genesfile: "../anno/genes.txt"
+  root: "/example/"
+  fname: "reconstruct.test"
+  sample: "test"
+  bw: "/example/coverage.bw"
+  nodefile: "/example/reconstruct.ecDNA.bed"
+  edgesfile: "/example/reconstruct.links.ecDNA.txt"
+  summaryfile: "/example/summary.txt"
   window: ""
-  decoilversion: "1.1.2"
+  decoilvizversion: "1.0.0"
   filtertop: ""
   filterscore: ""
 fontsize: 9pt
@@ -94,55 +74,41 @@ h1, h2, h3, h4, h5, h6 {
 
 ```
 
-
 ```{r setup, echo=FALSE, include=FALSE, message = FALSE, warning=FALSE}
 knitr::opts_chunk$set(ev = "png",
                       dpi = 600,
                       echo = FALSE,
                       cache = TRUE,
                       fig.width=7,
-                      out.width="100%")
-# install.packages("prettydoc")
-# install.packages("BiocManager")
-# library(BiocManager)
-# install("ggbio")
-# BiocManager::install('plyranges')
+                      out.width="100%",
+                      root.dir = params$root)
 library(rtracklayer)
 library(pafr)
-# library(ggplot2)
-# library(gridExtra)
 library(gTrack)
 library(gGnome)
 library(GenomicRanges)
 library(dplyr)
-# library(parallel)
 library(rmarkdown)
 library(knitr)
 library(kableExtra)
-# library(pander)
-# library(ggbio)
 library(Gviz)
 library(plyranges)
 library(assertthat)
 library(DT)
 
 root <- params$root
-rootimg <- params$rootimg
-# the path outside the container, i.e. on host
-rootreal <- params$rootreal
+setwd(root)
 
-dir.create(file.path(root))
-dir.create(file.path(paste0(rootreal,rootimg)))
-
-nodesfile <- paste0(root,params$nodefile)
-edgesfile <- paste0(root, params$edgesfile)
-summfile <- paste0(root, params$summaryfile)
+nodesfile <- params$nodefile
+edgesfile <- params$edgesfile
+summfile <- params$summaryfile
 bwfile <- params$bw
 sample <- params$sample
 maxcov <- params$maxcov
-htmlfile <- params$fname
+fname <- params$fname
+htmlfile <- paste0(root, fname, ".html")
 
-decoilversion <- params$decoilversion
+decoilvizversion <- params$decoilvizversion
 refgenome <- params$refgenome
 gtffile <- params$gtffile
 genes <- params$genesfile
@@ -168,15 +134,15 @@ corder = c("Simple circle", "Simple SV's", "Mixed SV's", "Multi-region intra-chr
 ### Configuration
 
 >**Date**: `r Sys.Date()` <br/>
->**Decoil version**: `r decoilversion`
+>**Decoil-viz version**: `r decoilvizversion`
 
 >**Reference genome**: `r refgenome` <br/>
 >**GTF annotation file**: `r gtffile` <br/>
 >**Gene list**: `r genes` 
 
 >**Sample name**: `r sample` <br/>
->**Genomic regions**: `r paste0(rootreal,nodesfile)` <br/>
->**Breakpoints information**: `r paste0(rootreal,edgesfile)` <br/>
+>**Genomic regions**: `r nodesfile` <br/>
+>**Breakpoints information**: `r edgesfile` <br/>
 >**Coverage track**: `r bwfile` <br/>
 >**ROI (region of interest)**: `r windowfile` <br/>
 >**Output**: `r htmlfile`
@@ -212,7 +178,6 @@ if (length(ed1) < 2){
   }
 }
 
-
 ```
 
 ```{r load_annotation, echo=FALSE, message = FALSE, warning=FALSE, cache = FALSE}
@@ -242,23 +207,10 @@ seqlevels(filtered_gr) <- filteredlevels
 
 gencode = gTrack(filtered_gr, name = 'Gencode', gr.labelfield = 'gene_name', grl.labelfield = 'gene_name', height = 90, stack.gap = 1e+06, col=alpha('#159957', .5), xaxis.round = NA, circles = FALSE)
 
-# gencode = gTrack(filtered_gr, name = 'Gencode', gr.labelfield = 'gene_name', grl.labelfield = 'gene_name', gr.cex.label = 2, height = 90, stack.gap = 1e+06, xaxis.unit = 5, grl.colorfield = 'yellow', sep.bg.col = 'white', path.col = "yellow", gr.srt.label = 2, col=alpha('#159957', .5))
-
-# gencode <- track.gencode(gencode = filtered_gr, stack.gap = 1e+06, cex.label = 0.6, height = 90, cached = FALSE, build = NULL,
-#                         name = 'Gencode', labels.suppress.gr=T, gene.collapse = T,
-#                         genes=read.csv2(genes,header=F,"\t")$V1,
-#                         bg.col = alpha("black", 1),
-#                         cds.col = alpha("black", 0),
-#                         utr.col = alpha("black",0),
-#                         st.col = alpha("black",0),
-#                         en.col = alpha("black",0))
-
 ```
-
 
 ```{r read_nodes_edges, echo=TRUE, include=FALSE, message = FALSE, warning=FALSE}
 #### 2. Read nodes
-setwd(root)
 
 df_nodes <- read.csv2(nodesfile,header=T,sep="\t")
 gr_nodes <- makeGRangesFromDataFrame(df_nodes,
@@ -314,7 +266,6 @@ df_summary <- read.csv2(summfile,header=T,sep="\t")
 # print(df_nodes)
 ```
 
-
 ### Reconstruction of the invidiual ecDNA elements
 <br/>
 
@@ -340,7 +291,7 @@ draw_legend_topology <- function(){
 }
 
 #### 4. Draw circles
-draw_amplicon <- function(s, bwpath, maxcov, df_edges, gr_nodes, df_summary, windowfile){
+draw_amplicon <- function(s, bwpath, maxcov, df_edges, gr_nodes, df_summary, windowfile, root){
 
   gg_all <- c()
   plots_all <- c()
@@ -370,7 +321,7 @@ draw_amplicon <- function(s, bwpath, maxcov, df_edges, gr_nodes, df_summary, win
     edge_color <- df_summary[df_summary$circ_id==circ,]$topology_idx
     edges1$col <- alpha(colors[edge_color+1], .8)
     
-    fcirc <- paste0(rootreal,rootimg, circ, ".pdf")
+    fcirc <- paste0(fname, "/", circ, ".pdf")
 
     cat("Reconstruction for sample:",s,"<br/>")
     cat("EcDNA element: circ_id =", circ, "<br/>")
@@ -421,7 +372,7 @@ draw_amplicon <- function(s, bwpath, maxcov, df_edges, gr_nodes, df_summary, win
                         windows, sep.draw = FALSE)
     
     # plot as pdf
-    pdf(fcirc)
+    pdf(paste0(root, fcirc))
     gTrack::plot.gTrack(c(gencode, gTrackCov, gt_temp),
                         windows,sep.draw = FALSE)
     dev.off()
@@ -436,14 +387,12 @@ draw_amplicon <- function(s, bwpath, maxcov, df_edges, gr_nodes, df_summary, win
 
 ```
 
-
 ```{r draw_amplicons, echo=FALSE, warning=FALSE,  fig.height=6, results='asis', out.width="100%"}
 #### 5. Draw individuals 
-out <- draw_amplicon(sample, bwfile, maxcov, df_edges, gr_nodes, df_summary, windowfile)
+out <- draw_amplicon(sample, bwfile, maxcov, df_edges, gr_nodes, df_summary, windowfile, root)
 p1 <- out$gplots
 paths_plots <- out$plotsall
 ```
-
 ### Summary of all found ecDNA elements
 <br/>
 
@@ -465,14 +414,13 @@ gTrackCov <- gTrack(gRangesCov,
                     y0=0, y1=maxcov, height=70)
 
 # as pdf
-fcirc <- paste0(rootreal, rootimg, "all_ecdna_elements.pdf")
+fcirc <- paste0(fname, "/all_ecdna_elements.pdf")
 paths_plots <- c(paths_plots, fcirc)
 
-pdf(fcirc)
+pdf(paste0(root,fcirc))
 gTrack::plot.gTrack(c(gencode, gTrackCov,p1),
                     windows,
                     sep.draw = FALSE)
-draw_legend_topology()
 dev.off()
 
 # as png

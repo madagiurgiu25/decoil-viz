@@ -1,0 +1,27 @@
+class CONFIG_R:
+	NODEFILE = 'nodefile'
+	EDGESFILE = 'edgesfile'
+	BW = 'bw'
+	SAMPLE = 'sample'
+	MAXCOV = 'maxcov'
+	REFGENOME = 'refgenome'
+	GENCODE = 'gencode'
+	ANNO = 'anno'
+	GENESFILE = 'genesfile'
+	DECOILVERSION = 'decoilvizversion'
+	GTFFILE = 'gtffile'
+	ROOT = 'root'
+	ROOTREAL = 'rootreal'
+	ROOTIMG = 'rootimg'
+	GENESANNO = 'anno/genes.txt'
+	FNAME = 'fname'
+	TEMPLATE = 'template.Rmd'
+	SUMMARYFILE = 'summaryfile'
+	OUTPUT = '/output'
+	WINDOW = 'window'
+	FILTERSCORE = 'filtertop'
+	FILTERTOP = 'filterscore'
+ 
+class ENV:
+	IN_CONTAINER = 'IN_CONTAINER'
+ 
