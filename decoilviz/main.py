@@ -45,7 +45,7 @@ def run_plot_only(outputdir,
  
 	refgenome = os.path.abspath(refgenome)
 	gtffile = os.path.abspath(gtffile)
-	genesfile =  os.path.join(os.path.dirname(decoilviz.__file__), "..", cr.GENESANNO)
+	genesfile =  cr.GENESANNO
 	print("Genes file: ", genesfile)
  
     # change to local directory
@@ -102,7 +102,7 @@ def main(sysargs=sys.argv[1:]):
         parser = argparse.ArgumentParser(prog="decoil-viz",
                                             description="""Decoil-viz {}: visualize ecDNA reconstruction threads + report""".format(
                                             decoilviz.__version__),
-                                            usage="decoil-viz --outputdir <outputdir> --name <sample> -r <reference-genome> -g <annotation-gtf>")
+                                            usage="decoil-viz --outputdir <outputdir> --name <sample> -r <reference-genome> -g <annotation-gtf> --coverage <bw> --summary <summary.txt> --bed <reconstruct.bed> --links <reconstruct.links.txt>")
         parser.add_argument('--version', action='version',
                             version='%(prog)s {}'.format(decoilviz.__version__))
         parser.add_argument('-o', '--outputdir', required=True, type=str)
