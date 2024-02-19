@@ -28,7 +28,6 @@ wget -O - https://zenodo.org/records/10679429/files/reconstruct.ecDNA.filtered.b
 wget -O - https://zenodo.org/records/10679429/files/reconstruct.links.ecDNA.filtered.txt > $LINKS
 wget -O - https://zenodo.org/records/10679429/files/summary.txt > $SUMMARY
 
-
 # run visualization
 docker run --platform=linux/amd64 -v $REF:$REF -v $ANNO:$ANNO -v $COVERAGE:$COVERAGE -v $BED:$BED -v $LINKS:$LINKS -v $OUTDIR:$OUTDIR -v $SUMMARY:$SUMMARY decoil-viz:1.0.0 decoil-viz --coverage $COVERAGE --bed $BED --links $LINKS -r $REF -g $ANNO -o $OUTDIR --summary $SUMMARY --name $NAME
 ```
