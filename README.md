@@ -25,6 +25,13 @@ docker pull madagiurgiu25/decoil-viz:1.0.0
 
 ### Test decoil-viz on your machine 
 
+0. Create output directory
+
+```commandline
+mkdir -p $PWD/example
+chmod 777 $PWD/example
+```
+
 1. Download test files from [zenodo:10679429](https://zenodo.org/records/10679429)
 
 ```commandline
@@ -39,7 +46,6 @@ OUTDIR=$PWD/example
 NAME=test
 
 # download example data
-mkdir -p $PWD/example
 wget -O - https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_44/GRCh38.primary_assembly.genome.fa.gz | gunzip -c > $REF
 wget -O - https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_44/gencode.v44.primary_assembly.basic.annotation.gtf.gz | gunzip -c > $ANNO
 wget -O - https://zenodo.org/records/10679429/files/coverage.bw > $COVERAGE
@@ -52,7 +58,23 @@ wget -O - https://zenodo.org/records/10679429/files/summary.txt > $SUMMARY
 
 ```commandline
 # run visualization
-docker run --platform=linux/amd64 -v $REF:$REF -v $ANNO:$ANNO -v $COVERAGE:$COVERAGE -v $BED:$BED -v $LINKS:$LINKS -v $OUTDIR:$OUTDIR -v $SUMMARY:$SUMMARY decoil-viz:1.0.0 decoil-viz --coverage $COVERAGE --bed $BED --links $LINKS -r $REF -g $ANNO -o $OUTDIR --summary $SUMMARY --name $NAME
+docker run --platform=linux/amd64 \
+    -v $REF:$REF \
+    -v $ANNO:$ANNO \
+    -v $COVERAGE:$COVERAGE \
+    -v $BED:$BED \
+    -v $LINKS:$LINKS \
+    -v $SUMMARY:$SUMMARY \
+    -v $OUTDIR:$OUTDIR \
+decoil-viz:1.0.0 decoil-viz \
+    --coverage $COVERAGE \
+    --bed $BED \
+    --links $LINKS \
+    -r $REF \
+    -g $ANNO \
+    -o $OUTDIR \
+    --summary $SUMMARY \
+    --name $NAME
 ```
 
 ## Decoil-viz configuration <a name="decoil-usage"></a>
