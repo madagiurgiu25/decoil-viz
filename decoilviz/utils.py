@@ -13,7 +13,7 @@ class CONFIG_R:
 	ROOT = 'root'
 	ROOTREAL = 'rootreal'
 	ROOTIMG = 'rootimg'
-	GENESANNO = 'anno/genes.txt'
+	GENESANNO = '/code/anno/genes.txt'
 	FNAME = 'fname'
 	TEMPLATE = 'template.Rmd'
 	SUMMARYFILE = 'summaryfile'

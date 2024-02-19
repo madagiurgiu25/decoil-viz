@@ -46,6 +46,7 @@ def run_plot_only(outputdir,
 	refgenome = os.path.abspath(refgenome)
 	gtffile = os.path.abspath(gtffile)
 	genesfile =  os.path.join(os.path.dirname(decoilviz.__file__), "..", cr.GENESANNO)
+	print("Genes file: ", genesfile)
  
     # change to local directory
 	currpath = os.getcwd()

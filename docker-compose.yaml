@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  decoilviz:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+       VERSION_BASE: ${VERSION_DECOILVIZ}
+    platform: linux/amd64
+    image: decoil-viz:${VERSION_DECOILVIZ}

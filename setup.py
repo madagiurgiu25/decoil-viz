@@ -11,7 +11,6 @@ def check_r_package(package_name):
         print(f"Error checking R package {package_name}: {e}")
         return False
     
-
 def check_r_dependencies():
     
     packages = ["ggplot2",
@@ -30,6 +29,9 @@ def check_r_dependencies():
             
 with open("README.md", "r", encoding="utf-8") as fh:
 	long_description = fh.read()
+ 
+with open("requirements.txt", "r", encoding="utf-8") as f:
+	required = [x for x in f.read().splitlines() if not x.startswith("#")] 
 
 setuptools.setup(name='decoilviz',
 				 version=decoilviz.__version__,
@@ -44,14 +46,8 @@ setuptools.setup(name='decoilviz',
 						 'decoil-viz = decoilviz.main:main'
 					 ]
 				 },
-				 extra_require={
-					 "build": [
-						 # Define environment variables for the build process
-						 "IN_CONTAINER=True",
-					 ],
-				 },
-				 package_data={'': ['Snakefile', '*.json', 'envs/*.yaml', '*.Rmd', '*.gtf', '*.fa', '*.txt']},
-				 # install_requires=required,
+				 package_data={'': ['*.Rmd', '*.txt']},
+				 install_requires=required,
 				 python_requires=">=3.7.0",
 				 packages=setuptools.find_packages(),
 				 include_package_data=True,

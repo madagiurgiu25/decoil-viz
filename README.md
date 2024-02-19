@@ -9,22 +9,37 @@ To run `decoil-viz` you need to have installed   [docker](https://docs.docker.co
 ### Test decoil-viz on your machine
 ```bash
 
+# configure variables
+REF=$PWD/example/GRCh38.primary_assembly.genome.fa
+ANNO=$PWD/example/gencode.v42.primary_assembly.basic.annotation.gtf
+COVERAGE=$PWD/example/coverage.bw
+BED=$PWD/example/reconstruct.ecDNA.filtered.bed
+LINKS=$PWD/example/reconstruct.links.ecDNA.filtered.txt
+SUMMARY=$PWD/example/summary.txt
+OUTDIR=$PWD/example
+NAME=test
+
+# download example data
+mkdir -p $PWD/example
+wget -O - https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_44/GRCh38.primary_assembly.genome.fa.gz | gunzip -c > $REF
+wget -O - https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_44/gencode.v44.primary_assembly.basic.annotation.gtf.gz | gunzip -c > $ANNO
+wget -O - https://zenodo.org/records/10679429/files/coverage.bw > $COVERAGE
+wget -O - https://zenodo.org/records/10679429/files/reconstruct.ecDNA.filtered.bed > $BED
+wget -O - https://zenodo.org/records/10679429/files/reconstruct.links.ecDNA.filtered.txt > $LINKS
+wget -O - https://zenodo.org/records/10679429/files/summary.txt > $SUMMARY
+
+
+# run visualization
+docker run --platform=linux/amd64 -v $REF:$REF -v $ANNO:$ANNO -v $COVERAGE:$COVERAGE -v $BED:$BED -v $LINKS:$LINKS -v $OUTDIR:$OUTDIR -v $SUMMARY:$SUMMARY decoil-viz:1.0.0 decoil-viz --coverage $COVERAGE --bed $BED --links $LINKS -r $REF -g $ANNO -o $OUTDIR --summary $SUMMARY --name $NAME
 ```
-
-### Run decoil-viz using decoil output
-
-```bash
-```
-
-### Run decoil-viz using other reconstructions tools output
-
-```bash
-
-```
-
-
 
 ## Build environment -  for developers
+
+Build decoil-viz image:
+
+```bash
+docker compose -f docker-compose.yaml build
+```
 
 Build the base R 4.1.1 image including all the R dependencies required to run `decoil-viz`:
 
