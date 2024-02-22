@@ -15,7 +15,6 @@ from pprint import pprint
 import decoilviz
 from decoilviz.utils import CONFIG_R as cr
 from decoilviz.utils import ENV as env
-from decoilviz.utils import 
 from decoilviz import visualize
 
 def run_plot_only(outputdir, 
