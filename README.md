@@ -23,7 +23,7 @@ No additional installation needed.
 docker pull madagiurgiu25/decoil-viz:1.0.0
 ```
 
-### Test decoil-viz on your machine 
+### Test decoil-viz on your machine
 
 0. Create output directory
 
@@ -66,7 +66,7 @@ docker run --platform=linux/amd64 \
     -v $LINKS:$LINKS \
     -v $SUMMARY:$SUMMARY \
     -v $OUTDIR:$OUTDIR \
-decoil-viz:1.0.0 decoil-viz \
+decoil-viz:1.0.1 decoil-viz \
     --coverage $COVERAGE \
     --bed $BED \
     --links $LINKS \
@@ -75,6 +75,23 @@ decoil-viz:1.0.0 decoil-viz \
     -o $OUTDIR \
     --summary $SUMMARY \
     --name $NAME
+```
+
+## Install from source
+
+If you install `decoil-viz` from source you will need, `R>=4.1.1`, `python>=3.7` and `git`.
+
+```
+git clone https://github.com/madagiurgiu25/decoil-viz.git
+cd decoil-viz
+# install R dependencies
+Rscript requirements.R
+
+# install decoil-viz
+python -m pip install .
+
+# test installation
+decoil-viz --help
 ```
 
 ## Decoil-viz configuration <a name="decoil-usage"></a>
@@ -86,7 +103,7 @@ docker run madagiurgiu25/decoil-viz:1.0.0 decoil-viz --help
 
 usage: decoil-viz --outputdir <outputdir> --name <sample> -r <reference-genome> -g <annotation-gtf> --coverage <bw> --summary <summary.txt> --bed <reconstruct.bed> --links <reconstruct.links.txt>
 
-Decoil-viz 1.0.0: visualize ecDNA reconstruction threads + report
+Decoil-viz 1.0.1: visualize ecDNA reconstruction threads + report
 
 optional arguments:
   -h, --help            show this help message and exit

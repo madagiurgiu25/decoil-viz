@@ -8,7 +8,7 @@ LABEL "desc"="Decoil-viz environment"
 
 RUN apt-get -y update \
     && apt-get install -y --no-install-recommends libssl-dev software-properties-common build-essential libstdc++6 pandoc openssh-server gcc g++ \
-    && apt-get install -y zlib1g-dev libcurl4-openssl-dev python3-pip python3-dev \
+    && apt-get install -y zlib1g-dev libcurl4-openssl-dev python3-pip python3-dev libxt6 \
     && apt-get clean -y \
     && rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
 
