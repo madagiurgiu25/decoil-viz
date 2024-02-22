@@ -15,6 +15,7 @@ from pprint import pprint
 import decoilviz
 from decoilviz.utils import CONFIG_R as cr
 from decoilviz.utils import ENV as env
+from decoilviz.utils import 
 from decoilviz import visualize
 
 def run_plot_only(outputdir, 
@@ -84,9 +85,18 @@ def validate_input(args):
               args.bed,
               args.outputdir,
               args.annotation_gtf,
-              args.reference_genome]:
+              args.reference_genome,
+              args.genes]:
+        
+        # check if path is absolute path
         if os.path.isabs(i) == False:
             raise ValueError("Path '{}' is not an absolute path. Please provide an absolute path.".format(i))
+        
+        # if this is a file check if exist
+        if i not in [args.outputdir]:
+            if os.path.exists(i) == False:
+                raise ValueError("File '{}' is does not exist.".format(i))
+            
 
 def main(sysargs=sys.argv[1:]):
     
@@ -124,12 +134,15 @@ def main(sysargs=sys.argv[1:]):
                             help='Keep reconstructions within defined window (path to file in bed format)',
                             required=False, default="", type=str)
         parser.add_argument('--full', help='Generate full report', default=True, type=bool)
+        parser.add_argument('--genes',help='Path to list of gene names / oncogenes', default="/code/anno/genes.txt", required=False)
         
         args = parser.parse_args(sysargs)
 
+        # set path to gene list
+        cr.GENESANNO = args.genes
         validate_input(args)
         os.makedirs(args.outputdir, exist_ok=True)
-        
+  
         run_plot_only(args.outputdir,
                     args.name,
                     args.annotation_gtf,

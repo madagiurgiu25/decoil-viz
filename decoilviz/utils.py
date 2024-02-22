@@ -14,6 +14,7 @@ class CONFIG_R:
 	ROOTREAL = 'rootreal'
 	ROOTIMG = 'rootimg'
 	GENESANNO = '/code/anno/genes.txt'
+	# GENESANNO = '/Users/madag/Projects/PhD/github/decoil-viz/anno/genes.txt'
 	FNAME = 'fname'
 	TEMPLATE = 'template.Rmd'
 	SUMMARYFILE = 'summaryfile'
