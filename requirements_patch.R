@@ -1,0 +1,1 @@
+install.packages("rmarkdown", repos="http://cran.r-project.org", version="2.23")

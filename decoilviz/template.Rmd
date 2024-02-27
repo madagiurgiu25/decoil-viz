@@ -4,7 +4,7 @@ output:
   html_document:
     toc: TRUE
     toc_float: TRUE
-    keep_md: yes
+    keep_md: false
 params:
   help: false
   maxcov: 600
