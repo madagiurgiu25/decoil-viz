@@ -20,7 +20,7 @@ No additional installation needed.
 
 ```commandline
 # docker
-docker pull madagiurgiu25/decoil-viz:1.0.0
+docker pull madagiurgiu25/decoil-viz:1.0.1
 ```
 
 ### Test decoil-viz on your machine
