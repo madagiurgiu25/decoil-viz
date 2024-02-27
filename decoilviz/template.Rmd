@@ -78,7 +78,7 @@ h1, h2, h3, h4, h5, h6 {
 knitr::opts_chunk$set(ev = "png",
                       dpi = 600,
                       echo = FALSE,
-                      cache = TRUE,
+                      cache = FALSE,
                       fig.width=7,
                       out.width="100%",
                       root.dir = params$root)

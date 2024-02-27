@@ -7,7 +7,7 @@ Visualize ecDNA reconstruction threads and summarize all the results generated b
 - [Citation](#citation)
 - [License](#license)
 
-## Getting started using docker  <a name="gettingstarted"></a> 
+## Getting started using docker or singularity  <a name="gettingstarted"></a> 
 
 <img src="./decoil-viz.gif" width="600">
 <br/>
@@ -21,6 +21,9 @@ No additional installation needed.
 ```commandline
 # docker
 docker pull madagiurgiu25/decoil-viz:1.0.1
+
+# or singularity
+singularity pull madagiurgiu25/decoil-viz:1.0.1
 ```
 
 ### Test decoil-viz on your machine
@@ -36,13 +39,14 @@ chmod 777 $PWD/example
 
 ```commandline
 # configure variables
-REF=$PWD/example/GRCh38.primary_assembly.genome.fa
-ANNO=$PWD/example/gencode.v42.primary_assembly.basic.annotation.gtf
-COVERAGE=$PWD/example/coverage.bw
-BED=$PWD/example/reconstruct.ecDNA.filtered.bed
-LINKS=$PWD/example/reconstruct.links.ecDNA.filtered.txt
-SUMMARY=$PWD/example/summary.txt
-OUTDIR=$PWD/example
+ROOT=$PWD
+REF=$ROOT/example/GRCh38.primary_assembly.genome.fa
+ANNO=$ROOT/example/gencode.v42.primary_assembly.basic.annotation.gtf
+COVERAGE=$ROOT/example/coverage.bw
+BED=$ROOT/example/reconstruct.ecDNA.filtered.bed
+LINKS=$ROOT/example/reconstruct.links.ecDNA.filtered.txt
+SUMMARY=$ROOT/example/summary.txt
+OUTDIR=$ROOT/example
 NAME=test
 
 # download example data
@@ -52,13 +56,21 @@ wget -O - https://zenodo.org/records/10679429/files/coverage.bw > $COVERAGE
 wget -O - https://zenodo.org/records/10679429/files/reconstruct.ecDNA.filtered.bed > $BED
 wget -O - https://zenodo.org/records/10679429/files/reconstruct.links.ecDNA.filtered.txt > $LINKS
 wget -O - https://zenodo.org/records/10679429/files/summary.txt > $SUMMARY
+
+# test your files exist
+ls -lthr $REF
+ls -lthr $ANNO
+ls -lthr $COVERAGE
+ls -lthr $BED
+ls -lthr $LINKS
+ls -lthr $SUMMARY
 ```
 
-2. Run test:
+2. Run test using Docker:
 
 ```commandline
-# run visualization
-docker run --platform=linux/amd64 \
+# run visualization using docker
+docker run --platform=linux/amd64 \ 
     -v $REF:$REF \
     -v $ANNO:$ANNO \
     -v $COVERAGE:$COVERAGE \
@@ -66,7 +78,7 @@ docker run --platform=linux/amd64 \
     -v $LINKS:$LINKS \
     -v $SUMMARY:$SUMMARY \
     -v $OUTDIR:$OUTDIR \
-decoil-viz:1.0.1 decoil-viz \
+madagiurgiu25/decoil-viz:1.0.1 decoil-viz \
     --coverage $COVERAGE \
     --bed $BED \
     --links $LINKS \
@@ -77,9 +89,35 @@ decoil-viz:1.0.1 decoil-viz \
     --name $NAME
 ```
 
+3. Run test using Singularity
+
+
+```commandline
+# run visualization using singularity
+singularity run \
+    --bind $OUTDIR:/mnt \
+    --bind $REF:/mnt/ref.fa \
+    --bind $ANNO:/mnt/anno.gtf \
+    --bind $COVERAGE:/mnt/coverage.bw \
+    --bind $BED:/mnt/reconstruct.bed \
+    --bind $LINKS:/mnt/reconstruct.links.txt \
+    --bind $SUMMARY:/mnt/summary.txt \
+decoil-viz.sif decoil-viz \
+    --coverage /mnt/coverage.bw \
+    --bed /mnt/reconstruct.bed \
+    --links /mnt/reconstruct.links.txt \
+    -r /mnt/ref.fa \
+    -g /mnt/anno.gtf \
+    -o /mnt \
+    --summary /mnt/summary.txt \
+    --name $NAME
+```
+
+
+
 ## Install from source
 
-If you install `decoil-viz` from source you will need, `R>=4.1.1`, `python>=3.7` and `git`.
+If you install `decoil-viz` from source, the prequisites are `R>=4.1.1`, `python>=3.7` and `git`.
 
 ```
 git clone https://github.com/madagiurgiu25/decoil-viz.git
