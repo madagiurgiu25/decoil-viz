@@ -11,7 +11,7 @@ Visualize ecDNA reconstruction threads and summarize all the results generated b
 
 <img src="./decoil-viz.gif" width="600">
 <br/>
-To run `decoil-viz` you need to have installed [docker](https://docs.docker.com/engine/install/), and have docker engine running.
+To run `decoil-viz` you need to have installed [docker](https://docs.docker.com/engine/install/), and have docker engine running, or, [singularity](https://anaconda.org/conda-forge/singularity).
 
 ### Download the docker image
 
@@ -22,8 +22,9 @@ No additional installation needed.
 # docker
 docker pull madagiurgiu25/decoil-viz:1.0.1
 
-# or singularity
-singularity pull madagiurgiu25/decoil-viz:1.0.1
+# convert docker to singularity
+cd decoil-viz
+singularity pull decoil-viz.sif  docker://madagiurgiu25/decoil-viz:1.0.3
 ```
 
 ### Test decoil-viz on your machine
@@ -70,7 +71,7 @@ ls -lthr $SUMMARY
 
 ```commandline
 # run visualization using docker
-docker run --platform=linux/amd64 \ 
+docker run --platform=linux/amd64 \
     -v $REF:$REF \
     -v $ANNO:$ANNO \
     -v $COVERAGE:$COVERAGE \
@@ -78,7 +79,7 @@ docker run --platform=linux/amd64 \
     -v $LINKS:$LINKS \
     -v $SUMMARY:$SUMMARY \
     -v $OUTDIR:$OUTDIR \
-madagiurgiu25/decoil-viz:1.0.1 decoil-viz \
+madagiurgiu25/decoil-viz:1.0.3 decoil-viz \
     --coverage $COVERAGE \
     --bed $BED \
     --links $LINKS \
