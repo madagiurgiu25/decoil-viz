@@ -12,7 +12,6 @@ RUN apt-get -y update \
     && apt-get clean -y \
     && rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
 
-
 RUN mkdir -p /code
 COPY . /code
 
