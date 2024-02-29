@@ -1,0 +1,160 @@
+#!/bin/bash
+
+# decoil-viz version
+VERSION="1.0.3"
+
+COVERAGE=""
+SUMMARY=""
+REFERENCE=""
+GTF=""
+BED=""
+LINKS=""
+OUTDIR=""
+NAME=""
+
+singularity_flag=false
+docker_flag=false
+
+# Function to print usage information
+print_usage() {
+    echo "Usage: decoil-viz [--docker|--singularity] --coverage <coverage_file> --summary <summary_file> --reference <reference_file> --gtf <gtf_file> --bed <bed_file> --links <links_file> --outdir <output_directory> --name <output_name>"
+}
+
+
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+     echo "$1 $2"
+     case $1 in
+        --coverage)
+            COVERAGE="$2"
+            shift 2
+            ;;
+        --summary)
+            SUMMARY="$2"
+            shift 2
+            ;;
+        --reference)
+            REFERENCE="$2"
+            shift 2
+            ;;
+        --gtf)
+            GTF="$2"
+            shift 2
+            ;;
+        --bed)
+            BED="$2"
+            shift 2
+            ;;
+        --links)
+            LINKS="$2"
+            shift 2
+            ;;
+        --outdir)
+            OUTDIR="$2"
+            shift 2
+            ;;
+        --name)
+            NAME="$2"
+            shift 2
+            ;;
+         --docker)
+            if [ "$singularity_flag" = true ]; then
+                echo "Error: --docker and --singularity cannot be set at the same time"
+                exit 1
+            fi
+            docker_flag=true
+	    shift 1
+            ;;
+        --singularity)
+            if [ "$docker_flag" = true ]; then
+                echo "Error: --docker and --singularity cannot be set at the same time"
+                exit 1
+            fi
+            singularity_flag=true
+	    shift 1
+            ;;
+	*)
+            echo "Unknown option: $1"
+            print_usage
+            exit 1
+            ;;
+    esac
+done
+
+# Check if all required parameters are provided
+if [[ -z $COVERAGE || -z $SUMMARY || -z $REFERENCE || -z $GTF || -z $BED || -z $LINKS || -z $OUTDIR || -z $NAME ]]; then
+    echo "Error: Missing required parameter(s)."
+    print_usage
+    exit 1
+fi
+
+# Your script logic goes here...
+echo "Coverage file: $COVERAGE"
+echo "Summary file: $SUMMARY"
+echo "Reference file: $REFERENCE"
+echo "GTF file: $GTF"
+echo "BED file: $BED"
+echo "Links file: $LINKS"
+echo "Output directory: $OUTDIR"
+echo "Output name: $NAME"
+
+# List of files to check
+files=($REFERENCE $GTF $COVERAGE $SUMMARY $BED $LINKS)
+
+# Iterate over the list of files
+for file in "${files[@]}"; do
+    # Check if the file exists
+    if [ -e "$file" ]; then
+        echo "File '$file' exists."
+    else
+        echo "File '$file' does not exist."
+    fi
+done
+
+
+if [ [ "$singularity_flag" = false ] && [ "$docker_flag" = false ] ] ||  [ "$docker_flag" = true ]; then
+
+	echo "Running decoil-viz with docker..."
+
+	docker run --platform=linux/amd64 \
+    		-v $REFERENCE:$REFERENCE \
+    		-v $GTF:$GTF \
+    		-v $COVERAGE:$COVERAGE \
+    		-v $BED:$BED \
+    		-v $LINKS:$LINKS \
+    		-v $SUMMARY:$SUMMARY \
+   		-v $OUTDIR:$OUTDIR \
+	decoil-viz:${VERSION} decoil-viz \
+    		--coverage $COVERAGE \
+    		--bed $BED \
+    		--links $LINKS \
+    		-r $REFERENCE \
+    		-g $GTF \
+    		-o $OUTDIR \
+    		--summary $SUMMARY \
+    		--name $NAME
+	
+
+elif [ "$singularity_flag" = true ]; then
+
+	echo "Running decoil-viz with singularity..."
+
+	singularity run \
+		--bind $OUTDIR:/mnt:rw \
+		--bind $REFERENCE:/tmp/ref.fa \
+		--bind $GTF:/tmp/anno.gtf \
+		--bind $COVERAGE:/mnt/coverage.bw \
+		--bind $BED:/mnt/reconstruct.bed \
+		--bind $LINKS:/mnt/reconstruct.links.txt \
+		--bind $SUMMARY:/mnt/summary.txt \
+	decoil-viz.sif exec decoil-viz \
+		--coverage /mnt/coverage.bw \
+		--bed /mnt/reconstruct.bed \
+		--links /mnt/reconstruct.links.txt \
+		-r /tmp/ref.fa \
+		-g /tmp/anno.gtf \
+		--summary /mnt/summary.txt \
+		--name $NAME \
+		-o /mnt
+
+fi
