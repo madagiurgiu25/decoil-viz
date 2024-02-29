@@ -8,13 +8,13 @@ Visualize ecDNA reconstruction threads and summarize all the results generated b
 - [License](#license)
 
 
-## Getting started using docker  <a name="gettingstarted"></a> 
+## Getting started using docker or singularity <a name="gettingstarted"></a> 
 
 <img src="./decoil-viz.gif" width="600">
 <br/>
 To run `decoil-viz` you need to have installed [docker](https://docs.docker.com/engine/install/), and have docker engine running.
 
-### Install
+### 1. Install
 
 This image contains all the dependencies needed to run the software.
 No additional installation needed.
@@ -24,7 +24,7 @@ No additional installation needed.
 ./install.sh --singularity
 ```
 
-### Run decoil-viz
+### 2. Run decoil-viz
 
 With docker:
 
@@ -38,7 +38,7 @@ With singularity:
 decoil-viz --singularity --coverage $COVERAGE --summary $SUMMARY --reference $REF --gtf $GTF --bed $BED --links $LINKS --outdir $OUTDIR --name $NAME
 ```
 
-### Test decoil-viz on your machine
+### 3. Run test example on your machine
 
 0. Create output directory
 
