@@ -7,20 +7,35 @@ Visualize ecDNA reconstruction threads and summarize all the results generated b
 - [Citation](#citation)
 - [License](#license)
 
+
 ## Getting started using docker  <a name="gettingstarted"></a> 
 
 <img src="./decoil-viz.gif" width="600">
 <br/>
 To run `decoil-viz` you need to have installed [docker](https://docs.docker.com/engine/install/), and have docker engine running.
 
-### Download the docker image
+### Install
 
 This image contains all the dependencies needed to run the software.
 No additional installation needed.
 
 ```commandline
-# docker
-docker pull madagiurgiu25/decoil-viz:1.0.1
+./install.sh --docker
+./install.sh --singularity
+```
+
+### Run decoil-viz
+
+With docker:
+
+```commandline
+decoil-viz --docker --coverage $COVERAGE --summary $SUMMARY --reference $REF --gtf $GTF --bed $BED --links $LINKS --outdir $OUTDIR --name $NAME
+```
+
+With singularity:
+
+```commandline
+decoil-viz --singularity --coverage $COVERAGE --summary $SUMMARY --reference $REF --gtf $GTF --bed $BED --links $LINKS --outdir $OUTDIR --name $NAME
 ```
 
 ### Test decoil-viz on your machine
@@ -36,8 +51,8 @@ chmod 777 $PWD/example
 
 ```commandline
 # configure variables
-REF=$PWD/example/GRCh38.primary_assembly.genome.fa
-ANNO=$PWD/example/gencode.v42.primary_assembly.basic.annotation.gtf
+REFERENCE=$PWD/example/GRCh38.primary_assembly.genome.fa
+GTF=$PWD/example/gencode.v42.primary_assembly.basic.annotation.gtf
 COVERAGE=$PWD/example/coverage.bw
 BED=$PWD/example/reconstruct.ecDNA.filtered.bed
 LINKS=$PWD/example/reconstruct.links.ecDNA.filtered.txt
@@ -46,8 +61,8 @@ OUTDIR=$PWD/example
 NAME=test
 
 # download example data
-wget -O - https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_44/GRCh38.primary_assembly.genome.fa.gz | gunzip -c > $REF
-wget -O - https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_44/gencode.v44.primary_assembly.basic.annotation.gtf.gz | gunzip -c > $ANNO
+wget -O - https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_44/GRCh38.primary_assembly.genome.fa.gz | gunzip -c > $REFERENCE
+wget -O - https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_44/gencode.v44.primary_assembly.basic.annotation.gtf.gz | gunzip -c > $GTF
 wget -O - https://zenodo.org/records/10679429/files/coverage.bw > $COVERAGE
 wget -O - https://zenodo.org/records/10679429/files/reconstruct.ecDNA.filtered.bed > $BED
 wget -O - https://zenodo.org/records/10679429/files/reconstruct.links.ecDNA.filtered.txt > $LINKS
@@ -56,26 +71,18 @@ wget -O - https://zenodo.org/records/10679429/files/summary.txt > $SUMMARY
 
 2. Run test:
 
+With docker
+
 ```commandline
-# run visualization
-docker run --platform=linux/amd64 \
-    -v $REF:$REF \
-    -v $ANNO:$ANNO \
-    -v $COVERAGE:$COVERAGE \
-    -v $BED:$BED \
-    -v $LINKS:$LINKS \
-    -v $SUMMARY:$SUMMARY \
-    -v $OUTDIR:$OUTDIR \
-decoil-viz:1.0.1 decoil-viz \
-    --coverage $COVERAGE \
-    --bed $BED \
-    --links $LINKS \
-    -r $REF \
-    -g $ANNO \
-    -o $OUTDIR \
-    --summary $SUMMARY \
-    --name $NAME
+bash test_docker.sh
 ```
+
+With singularity
+
+```commandline
+bash test_singularity.sh
+```
+
 
 ## Install from source
 
