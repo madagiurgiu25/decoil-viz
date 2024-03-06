@@ -11,20 +11,48 @@ BED=""
 LINKS=""
 OUTDIR=""
 NAME=""
+WINDOW=""
 
 singularity_flag=false
 docker_flag=false
+phelp=false
+pversion=false
 
 # Function to print usage information
-print_usage() {
-    echo "Usage: decoil-viz [--docker|--singularity] --coverage <coverage_file> --summary <summary_file> --reference <reference_file> --gtf <gtf_file> --bed <bed_file> --links <links_file> --outdir <output_directory> --name <output_name>"
+print_usage_short() {
+    echo "Usage: decoil-viz [--docker|--singularity|--version|--help] --coverage <coverage_file> --summary <summary_file> --reference <reference_file> --gtf <gtf_file> --bed <bed_file> --links <links_file> --outdir <output_directory> --name <output_name>"
+}
+
+display_help(){
+    print_usage_short
+    echo ""
+    echo "Options:"
+    echo "	-h,--help	      		Display this help message"
+    echo "	--version	    		Display version"
+    echo "	--docker        		Flag: run decoil-viz using docker (set by default if --singularity not active)"
+    echo "	--singularity			Flag: run decoil-viz using singularity"
+    echo "	-o,--outdir <output_directory> Output directory (absolute path)"
+    echo "	--name				Sample name"
+    echo "	--coverage <coverage_file>	Coverage file in .bw format (absolute path)"
+    echo "	--bed <bed_file>		Reconstruction regions file in .bed like format (absolute path)"
+    echo "	--links <links_file>		Reconstruction links file in .txt format (absolute path)"
+    echo "	--summary <summary_file>	Reconstructions summary (absolute path)"
+    echo "	-r,--reference <reference_file>	Reference genome in .fasta format (absolute path)" 
+    echo "	-g,--gtf <gtf_file>		Genes annotation file in .gtf format (absolute path)"
 }
 
 
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
-     echo "$1 $2"
      case $1 in
+	--version)
+            pversion=true
+            shift 1
+            ;;
+        -h|--help)
+            phelp=true
+            shift 1
+            ;;
         --coverage)
             COVERAGE="$2"
             shift 2
@@ -33,11 +61,11 @@ while [[ $# -gt 0 ]]; do
             SUMMARY="$2"
             shift 2
             ;;
-        --reference)
+        -r|--reference)
             REFERENCE="$2"
             shift 2
             ;;
-        --gtf)
+        -g|--gtf)
             GTF="$2"
             shift 2
             ;;
@@ -49,12 +77,16 @@ while [[ $# -gt 0 ]]; do
             LINKS="$2"
             shift 2
             ;;
-        --outdir)
+        -o|--outdir)
             OUTDIR="$2"
             shift 2
             ;;
         --name)
             NAME="$2"
+            shift 2
+            ;;
+	--window-file)
+	    WINDOW="$2"
             shift 2
             ;;
          --docker)
@@ -75,16 +107,29 @@ while [[ $# -gt 0 ]]; do
             ;;
 	*)
             echo "Unknown option: $1"
-            print_usage
+            print_usage_short
             exit 1
             ;;
     esac
 done
 
+#  Check if help option is specified
+if [ "$phelp" = true ]; then
+    display_help
+    exit 0
+fi
+
+
+#  Check if versionn is specified
+if [ "$pversion" = true ]; then
+    echo "decoil-viz $VERSION"
+    exit 0
+fi
+
 # Check if all required parameters are provided
 if [[ -z $COVERAGE || -z $SUMMARY || -z $REFERENCE || -z $GTF || -z $BED || -z $LINKS || -z $OUTDIR || -z $NAME ]]; then
     echo "Error: Missing required parameter(s)."
-    print_usage
+    print_usage_short
     exit 1
 fi
 

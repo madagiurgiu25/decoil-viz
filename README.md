@@ -74,7 +74,7 @@ decoil-viz --help
 
 ## Decoil-viz configuration <a name="decoil-usage"></a>
 
-Usage:
+Commandline usage:
 
 ```commandline
 Usage: decoil-viz [--docker|--singularity|--version|--help] --coverage <coverage_file> --summary <summary_file> --reference <reference_file> --gtf <gtf_file> --bed <bed_file> --links <links_file> --outdir <output_directory> --name <output_name>
@@ -94,7 +94,9 @@ Options:
 	-g,--gtf <gtf_file>		Genes annotation file in .gtf format (absolute path)
 ```
 
-## Documentaiton for advanced users
+To generate the input files for visualizing the reconstruction threads go to [decoil](https://github.com/madagiurgiu25/decoil-pre).
+
+## Documentation for advanced users
 
 To access all features of `decoil-viz`, e.g. specify the plot-window, check [Documentation](docs/docs_main.md)
 
