@@ -110,9 +110,9 @@ If you use Decoil for your work please cite our pre-print:
 
 Madalina Giurgiu, Nadine Wittstruck, Elias Rodriguez-Fos, Rocio Chamorro Gonzalez, Lotte Bruckner, Annabell Krienelke-Szymansky, Konstantin Helmsauer, Anne Hartebrodt, Richard P. Koche, Kerstin Haase, Knut Reinert, Anton G. Henssen.
 _Decoil: Reconstructing extrachromosomal DNA structural heterogeneity from long-read sequencing data_. bioRxiv, 2023, DOI: [https://doi.org/10.1101/2023.11.15.567169](https://www.biorxiv.org/content/10.1101/2023.11.15.567169v1)
+<br/>
 
 ## License <a name="license"></a>
-<br/>
 
 Decoil-viz is distributed under BSD-3-Clause license. See [LICENSE](LICENSE) for details.
 
