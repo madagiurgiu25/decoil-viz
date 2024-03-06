@@ -48,5 +48,20 @@ if [ "$singularity_flag" = true ]; then
 fi
 
 DECOILVIZ=$PWD
-echo "export PATH=\$PATH:$DECOILVIZ" >> ~/.bash_profile
-source ~/.bash_profile
+
+# Check if the line is already present in ~/.decoil_profile
+if ! grep -q "$DECOILVIZ" ~/.bashrc; then
+    echo "export PATH=\$PATH:$DECOILVIZ" >> ~/.bashrc
+    echo "Append export PATH=\$PATH:$DECOILVIZ to ~/.bashrc"
+    source ~/.bashrc
+fi
+
+# Check if the line is already present in ~/.bashrc
+#if [[ $(grep "source ~/.decoil_profile" ~/.bashrc | wc -c) == 0 ]]; then
+#    # If not present, append the line to ~/.bashrc
+#    echo "Append: source ~/.decoil_profile to ~/.bashrc"
+#    echo "source ~/.decoil_profile" >> ~/.bashrc
+#fi
+
+#source ~/.decoil_profile
+
