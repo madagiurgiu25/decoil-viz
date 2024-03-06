@@ -47,4 +47,6 @@ if [ "$singularity_flag" = true ]; then
 	singularity pull decoil-viz.sif  docker://madagiurgiu25/decoil-viz:$VERSION	
 fi
 
-export PATH=$PWD:$PATH >> ~/.bashrc
+DECOILVIZ=$PWD
+echo "export PATH=\$PATH:$DECOILVIZ" >> ~/.bash_profile
+source ~/.bash_profile

@@ -12,7 +12,7 @@ Visualize ecDNA reconstruction threads and summarize all the results generated b
 
 <img src="./decoil-viz.gif" width="600">
 <br/>
-To run `decoil-viz` you need to have installed [docker](https://docs.docker.com/engine/install/), and have docker engine running.
+To run `decoil-viz` you need to have installed [docker](https://docs.docker.com/engine/install/) and/or singularity.
 
 ### 1. Install
 
@@ -20,7 +20,21 @@ This image contains all the dependencies needed to run the software.
 No additional installation needed.
 
 ```commandline
+git clone https://github.com/madagiurgiu25/decoil-viz.git
+cd decoil-viz
+```
+
+To download the docker image:
+
+```
+# for docker
 ./install.sh --docker
+```
+
+To download the singularity image:
+
+```
+# for singularity
 ./install.sh --singularity
 ```
 
@@ -29,13 +43,13 @@ No additional installation needed.
 With docker:
 
 ```commandline
-decoil-viz --docker --coverage $COVERAGE --summary $SUMMARY --reference $REF --gtf $GTF --bed $BED --links $LINKS --outdir $OUTDIR --name $NAME
+decoil-viz --docker --coverage <coverage_file> --summary <summary_file> --reference <reference_file> --gtf <gtf_file> --bed <bed_file> --links <links_file> --outdir <output_directory> --name <output_name>
 ```
 
 With singularity:
 
 ```commandline
-decoil-viz --singularity --coverage $COVERAGE --summary $SUMMARY --reference $REF --gtf $GTF --bed $BED --links $LINKS --outdir $OUTDIR --name $NAME
+decoil-viz --singularity --coverage <coverage_file> --summary <summary_file> --reference <reference_file> --gtf <gtf_file> --bed <bed_file> --links <links_file> --outdir <output_directory> --name <output_name>
 ```
 
 ### 3. Run test example on your machine
