@@ -24,4 +24,4 @@ def report_circles_r(outfile, params):
 	print(r_list)
 
 	# Render the RMarkdown file to HTML
-	rmarkdown.render(rmd_file, output_file=outfile, params=r_list, output_format="html_document")
+	rmarkdown.render(rmd_file, output_file=outfile, params=r_list, output_format="html_document", intermediates_dir=os.path.dirname(outfile))

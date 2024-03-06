@@ -12,7 +12,6 @@ RUN apt-get -y update \
     && apt-get clean -y \
     && rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
 
-
 RUN mkdir -p /code
 COPY . /code
 
@@ -20,6 +19,7 @@ RUN cd /code && \
     python3 -m pip uninstall decoil-viz -y && \
     python3 -m pip install --no-cache-dir setuptools && \
     python3 -m pip install --no-cache-dir . && \
-    python3 setup.py build install
+    python3 setup.py build install && \
+    Rscript requirements_patch.R
 
 CMD ["decoil-viz"]

@@ -7,12 +7,11 @@ Visualize ecDNA reconstruction threads and summarize all the results generated b
 - [Citation](#citation)
 - [License](#license)
 
-
 ## Getting started using docker or singularity <a name="gettingstarted"></a> 
 
 <img src="./decoil-viz.gif" width="600">
 <br/>
-To run `decoil-viz` you need to have installed [docker](https://docs.docker.com/engine/install/) and/or singularity.
+To run `decoil-viz` you need to have installed [docker](https://docs.docker.com/engine/install/), and have docker engine running, or, [singularity](https://anaconda.org/conda-forge/singularity).
 
 ### 1. Install
 
@@ -81,9 +80,17 @@ wget -O - https://zenodo.org/records/10679429/files/coverage.bw > $COVERAGE
 wget -O - https://zenodo.org/records/10679429/files/reconstruct.ecDNA.filtered.bed > $BED
 wget -O - https://zenodo.org/records/10679429/files/reconstruct.links.ecDNA.filtered.txt > $LINKS
 wget -O - https://zenodo.org/records/10679429/files/summary.txt > $SUMMARY
+
+# test your files exist
+ls -lthr $REF
+ls -lthr $ANNO
+ls -lthr $COVERAGE
+ls -lthr $BED
+ls -lthr $LINKS
+ls -lthr $SUMMARY
 ```
 
-2. Run test:
+2. Run test example:
 
 With docker
 
@@ -97,10 +104,9 @@ With singularity
 bash test_singularity.sh
 ```
 
-
 ## Install from source
 
-If you install `decoil-viz` from source you will need, `R>=4.1.1`, `python>=3.7` and `git`.
+If you install `decoil-viz` from source, the prequisites are `R>=4.1.1`, `python>=3.7` and `git`.
 
 ```
 git clone https://github.com/madagiurgiu25/decoil-viz.git
