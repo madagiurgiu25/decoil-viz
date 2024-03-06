@@ -13,7 +13,7 @@ Visualize ecDNA reconstruction threads and summarize all the results generated b
 <br/>
 To run `decoil-viz` you need to have installed [docker](https://docs.docker.com/engine/install/), and have docker engine running, or, [singularity](https://anaconda.org/conda-forge/singularity).
 
-#### Install
+### Install
 
 This image contains all the dependencies needed to run the software.
 No additional installation needed.
@@ -37,7 +37,7 @@ To download the singularity image:
 ./install.sh --singularity
 ```
 
-#### Run decoil-viz
+### Run decoil-viz
 
 With docker:
 
@@ -51,9 +51,10 @@ With singularity:
 decoil-viz --singularity --coverage <coverage_file> --summary <summary_file> --reference <reference_file> --gtf <gtf_file> --bed <bed_file> --links <links_file> --outdir <output_directory> --name <output_name>
 ```
 
-#### Run test example on your machine
+### Run test example on your machine
 
-To run a test example go to [Example](docs/example.md).
+To run a test example go to [Example](docs/example.md).<br/>
+
 
 ## Install from source
 
@@ -71,6 +72,7 @@ python -m pip install .
 # test installation
 decoil-viz --help
 ```
+<br/>
 
 ## Decoil-viz configuration <a name="decoil-usage"></a>
 
@@ -95,11 +97,12 @@ Options:
 ```
 
 To generate the input files for visualizing the reconstruction threads go to [decoil](https://github.com/madagiurgiu25/decoil-pre).
+<br/>
 
 ## Documentation for advanced users
 
 To access all features of `decoil-viz`, e.g. specify the plot-window, check [Documentation](docs/docs_main.md)
-
+<br/>
 
 ## Citation <a name="citation"></a>
 
@@ -109,6 +112,7 @@ Madalina Giurgiu, Nadine Wittstruck, Elias Rodriguez-Fos, Rocio Chamorro Gonzale
 _Decoil: Reconstructing extrachromosomal DNA structural heterogeneity from long-read sequencing data_. bioRxiv, 2023, DOI: [https://doi.org/10.1101/2023.11.15.567169](https://www.biorxiv.org/content/10.1101/2023.11.15.567169v1)
 
 ## License <a name="license"></a>
+<br/>
 
 Decoil-viz is distributed under BSD-3-Clause license. See [LICENSE](LICENSE) for details.
 
