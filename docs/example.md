@@ -24,13 +24,13 @@ To download the singularity image:
 
 ## Run test example on your machine
 
-0. Check installation
+### 0. Check installation
 
 ```
 decoil-viz --version
 ```
 
-1. Download test files from [zenodo:10679429](https://zenodo.org/records/10679429)
+### 1. Download test files from [zenodo:10679429](https://zenodo.org/records/10679429)
 
 ```commandline
 # create example folder
@@ -64,7 +64,7 @@ ls -lthr $LINKS
 ls -lthr $SUMMARY
 ```
 
-2. Run test example
+### 2. Run test example
 
 With docker
 
@@ -78,7 +78,7 @@ With singularity
 bash test_singularity.sh
 ```
 
-3. Check your output
+### 3. Check your output
 
 The run test with create an `example` directory in your `$PWD` and show have the following structure:
 
@@ -98,7 +98,7 @@ And the output is:
 - `reconstruct` - Folder containing the invididual reconstruction threads as .pdf for publication purpose
 
 
-4. Description of the input
+### 4. Description of the input
 
 - `coverage.bw` - Coverage file in .bw format inferred from the original .bam
 - `reconstruct.ecDNA.filtered.bed` - Reconstruction regions file in .bed like format
