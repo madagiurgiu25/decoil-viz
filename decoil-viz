@@ -192,7 +192,7 @@ elif [ "$singularity_flag" = true ]; then
 		--bind $BED:/mnt/reconstruct.bed \
 		--bind $LINKS:/mnt/reconstruct.links.txt \
 		--bind $SUMMARY:/mnt/summary.txt \
-	decoil-viz.sif exec decoil-viz \
+	decoil-viz.sif decoil-viz \
 		--coverage /mnt/coverage.bw \
 		--bed /mnt/reconstruct.bed \
 		--links /mnt/reconstruct.links.txt \
