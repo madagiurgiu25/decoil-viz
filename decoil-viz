@@ -169,7 +169,7 @@ if [ [ "$singularity_flag" = false ] && [ "$docker_flag" = false ] ] ||  [ "$doc
     		-v $LINKS:$LINKS \
     		-v $SUMMARY:$SUMMARY \
    		-v $OUTDIR:$OUTDIR \
-	decoil-viz:${VERSION} decoil-viz \
+	madagiurgiu25/decoil-viz:${VERSION} decoil-viz \
     		--coverage $COVERAGE \
     		--bed $BED \
     		--links $LINKS \
