@@ -123,7 +123,7 @@ Madalina Giurgiu, Nadine Wittstruck, Elias Rodriguez-Fos, Rocio Chamorro Gonzale
     issn = {1088-9051}
 }
 ```
-Paper repository: https://github.com/henssen-lab/decoil-paper
+Paper repository: [https://github.com/henssen-lab/decoil-paper](https://github.com/henssen-lab/decoil-paper)
 <br/>
 
 ## License <a name="license"></a>
