@@ -157,7 +157,7 @@ for file in "${files[@]}"; do
 done
 
 
-if [ [ "$singularity_flag" = false ] && [ "$docker_flag" = false ] ] ||  [ "$docker_flag" = true ]; then
+if [[ ("$singularity_flag" = false && "$docker_flag" = false) || "$docker_flag" = true ]]; then
 
 	echo "Running decoil-viz with docker..."
 
