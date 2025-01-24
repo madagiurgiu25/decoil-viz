@@ -7,7 +7,7 @@
 #SBATCH --mem=50G
 
 # image version
-VERSION="1.0.3"
+VERSION="1.0.4"
 
 singularity_flag=false
 docker_flag=false
