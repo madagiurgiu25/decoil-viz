@@ -1,14 +1,14 @@
 
 ## Run decoil-viz directly with docker
 
-Full usage of `madagiurgiu25/decoil-viz:1.0.3`.
+Full usage of `madagiurgiu25/decoil-viz:1.0.4`.
 
 ```
-docker run madagiurgiu25/decoil-viz:1.0.3 decoil-viz --help
+docker run madagiurgiu25/decoil-viz:1.0.4 decoil-viz --help
 
 usage: decoil-viz --outputdir <outputdir> --name <sample> -r <reference-genome> -g <annotation-gtf> --coverage <bw> --summary <summary.txt> --bed <reconstruct.bed> --links <reconstruct.links.txt>
 
-Decoil-viz 1.0.1: visualize ecDNA reconstruction threads + report
+Decoil-viz 1.0.4: visualize ecDNA reconstruction threads + report
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -33,6 +33,10 @@ optional arguments:
                         Keep reconstructions within defined window (path to
                         file in bed format)
   --full FULL           Generate full report
+  --genes GENES         Path to list of gene names / oncogenes
+  --extend-allowed-chr EXTEND_ALLOWED_CHR
+                        Extend chromosomal annotation list (e.g. --extend-
+                        allowed-chr chr1,chr2)
 ```
 
 
