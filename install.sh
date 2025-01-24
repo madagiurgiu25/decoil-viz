@@ -48,6 +48,7 @@ if [ "$singularity_flag" = true ]; then
 fi
 
 DECOILVIZ=$PWD
+export PATH=$PATH:$DECOILVIZ
 
 # Check if the line is already present in ~/.decoil_profile
 if ! grep -q "$DECOILVIZ" ~/.bashrc; then
