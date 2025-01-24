@@ -22,132 +22,133 @@ pversion=false
 
 # Function to print usage information
 print_usage_short() {
-    echo "Usage: decoil-viz [--docker|--singularity|--version|--help] --coverage <coverage_file> --summary <summary_file> --reference <reference_file> --annotation-gtf <gtf_file> --bed <bed_file> --links <links_file> --outputdir <output_directory> --name <output_name>"
+	echo "Usage: decoil-viz [--docker|--singularity|--version|--help] --coverage <coverage_file> --summary <summary_file> --reference <reference_file> --annotation-gtf <gtf_file> --bed <bed_file> --links <links_file> --outputdir <output_directory> --name <output_name>"
 }
 
 display_help(){
-    print_usage_short
-    echo ""
-    echo "Options:"
-    echo "	-h,--help                           Display this help message"
-    echo "	--version                           Display version"
-    echo "	--docker                            Flag: run decoil-viz using docker (set by default if --singularity not active)"
-    echo "	--singularity                       Flag: run decoil-viz using singularity"
-    echo "	-o,--outputdir <output_directory>   Output directory (absolute path)"
-    echo "	--name                              Sample name"
-    echo "	--coverage <coverage_file>          Coverage file in .bw format (absolute path)"
-    echo "	--bed <bed_file>                    Reconstruction regions file in BED like format (absolute path)"
-    echo "	--links <links_file>                Reconstruction links file in TXT format (absolute path)"
-    echo "	--summary <summary_file>            Reconstructions summary (absolute path)"
-    echo "	-r,--reference <reference_file>     Reference genome in .fasta format (absolute path)" 
-    echo "	-g,--annotation-gtf <gtf_file>      Genes annotation file in GTF format (absolute path)"
-    echo "Optional parameters:"
-    echo "  --genes-file [gene_names_file]      Gene names used for filtering the GTF file"
-    echo "  --window-file [window_file]         BED like file format with the region of interest"
-    echo "  --extend-allowed-chr [anno_list]    List of additional chromosomal annotation (e.g. chrTest,NC_060942.1...)"
+	print_usage_short
+	echo ""
+	echo "Options:"
+	echo "	-h,--help						   Display this help message"
+	echo "	--version						   Display version"
+	echo "	--docker							Flag: run decoil-viz using docker (set by default if --singularity not active)"
+	echo "	--singularity					   Flag: run decoil-viz using singularity"
+	echo "	-o,--outputdir <output_directory>   Output directory (absolute path)"
+	echo "	--name							  Sample name"
+	echo "	--coverage <coverage_file>		  Coverage file in .bw format (absolute path)"
+	echo "	--bed <bed_file>					Reconstruction regions file in BED like format (absolute path)"
+	echo "	--links <links_file>				Reconstruction links file in TXT format (absolute path)"
+	echo "	--summary <summary_file>			Reconstructions summary (absolute path)"
+	echo "	-r,--reference <reference_file>	 Reference genome in .fasta format (absolute path)" 
+	echo "	-g,--annotation-gtf <gtf_file>	  Genes annotation file in GTF format (absolute path)"
+	echo "Optional parameters:"
+	echo "  --genes-file [gene_names_file]	  Gene names used for filtering the GTF file"
+	echo "  --window-file [window_file]		 BED like file format with the region of interest"
+	echo "  --extend-allowed-chr [anno_list]	List of additional chromosomal annotation (e.g. chrTest,NC_060942.1...)"
 }
 
 
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
-     case $1 in
+	case $1 in
 	--version)
-        pversion=true
-        shift 1
-        ;;
-    -h|--help)
-        phelp=true
-        shift 1
-        ;;
-    --coverage)
-        COVERAGE="$2"
-        shift 2
-        ;;
-    --summary)
-        SUMMARY="$2"
-        shift 2
-        ;;
-    -r|--reference)
-        REFERENCE="$2"
-        shift 2
-        ;;
-    -g|--annotation-gtf)
-        GTF="$2"
-        shift 2
-        ;;
-    --bed)
-        BED="$2"
-        shift 2
-        ;;
-    --links)
-        LINKS="$2"
-        shift 2
-        ;;
-    -o|--outputdir)
-        OUTDIR="$2"
-        shift 2
-        ;;
-    --name)
-        NAME="$2"
-        shift 2
-        ;;
+		pversion=true
+		shift 1
+		;;
+	-h|--help)
+		phelp=true
+		shift 1
+		;;
+	--coverage)
+		COVERAGE="$2"
+		shift 2
+		;;
+	--summary)
+		SUMMARY="$2"
+		shift 2
+		;;
+	-r|--reference)
+		REFERENCE="$2"
+		shift 2
+		;;
+	-g|--annotation-gtf)
+		GTF="$2"
+		shift 2
+		;;
+	--bed)
+		BED="$2"
+		shift 2
+		;;
+	--links)
+		LINKS="$2"
+		shift 2
+		;;
+	-o|--outputdir)
+		OUTDIR="$2"
+		shift 2
+		;;
+	--name)
+		NAME="$2"
+		shift 2
+		;;
 	--window-file)
-	    WINDOW="$2"
-        shift 2
-        ;;
-    --genes-file)
-	    GENES="$2"
-        shift 2
-        ;;
-    --extend-allowed-chr)
-        EXTEND_CHR="$2"
-        shift 2
-        ;;
-    --docker)
-        if [ "$singularity_flag" = true ]; then
-            echo "Error: --docker and --singularity cannot be set at the same time"
-            exit 1
-        fi
-        docker_flag=true
-        shift 1
-        ;;
-    --singularity)
-        if [ "$docker_flag" = true ]; then
-            echo "Error: --docker and --singularity cannot be set at the same time"
-            exit 1
-        fi
-        singularity_flag=true
-        shift 1
-        ;;
+		WINDOW="$2"
+		shift 2
+		;;
+	--genes-file)
+		GENES="$2"
+		shift 2
+		;;
+	--extend-allowed-chr)
+		EXTEND_CHR="$2"
+		shift 2
+		;;
+	--docker)
+		if [ "$singularity_flag" = true ]; then
+			echo "Error: --docker and --singularity cannot be set at the same time"
+			exit 1
+		fi
+		docker_flag=true
+		shift 1
+		;;
+	--singularity)
+		if [ "$docker_flag" = true ]; then
+			echo "Error: --docker and --singularity cannot be set at the same time"
+			exit 1
+		fi
+		singularity_flag=true
+		shift 1
+		;;
 	*)
-        echo "Unknown option: $1"
-        print_usage_short
-        exit 1
-        ;;
-    esac
+		echo "Unknown option: $1"
+		print_usage_short
+		exit 1
+		;;
+	esac
 done
 
 #  Check if help option is specified
 if [ "$phelp" = true ]; then
-    display_help
-    exit 0
+	display_help
+	exit 0
 fi
 
 
 #  Check if versionn is specified
 if [ "$pversion" = true ]; then
-    echo "decoil-viz $VERSION"
-    exit 0
+	echo "decoil-viz $VERSION"
+	exit 0
 fi
 
 # Check if all required parameters are provided
 if [[ -z $COVERAGE || -z $SUMMARY || -z $REFERENCE || -z $GTF || -z $BED || -z $LINKS || -z $OUTDIR || -z $NAME ]]; then
-    echo "Error: Missing required parameter(s)."
-    print_usage_short
-    exit 1
+	echo "Error: Missing required parameter(s)."
+	print_usage_short
+	exit 1
 fi
 
 # Your script logic goes here...
+echo "Decoil-viz version: $VERSION [$COMMIT]" 
 echo "Coverage file: $COVERAGE"
 echo "Summary file: $SUMMARY"
 echo "Reference file: $REFERENCE"
@@ -165,62 +166,63 @@ files=($REFERENCE $GTF $COVERAGE $SUMMARY $BED $LINKS)
 
 # Iterate over the list of files
 for file in "${files[@]}"; do
-    # Check if the file exists
-    if [ -e "$file" ]; then
-        echo "File '$file' exists."
-    else
-        echo "File '$file' does not exist."
-    fi
+	# Check if the file exists
+	if [ -e "$file" ]; then
+		echo "File '$file' exists."
+	else
+		echo "File '$file' does not exist."
+	fi
 done
 
 CMD=""
-WINDOW_FILE_CONTAINER="/mnt/windowfile.bed"
-GENES_FILE_CONTAINER="/mnt/genes.txt"
 
-if [ -n "$WINDOW" ]; then
-    CMD+="--plot-window $WINDOW_FILE_CONTAINER "
+if [ "${#WINDOW}" -eq 0 ]; then
+	echo ""
+else
+	CMD+="--plot-window $WINDOW_FILE_CONTAINER "
 fi
 
-if [ -n "$GENES" ]; then
-    CMD+="--genes $GENES_FILE_CONTAINER "
+if [ -n $GENES ]; then
+	echo ""
+else
+	CMD+="--genes $GENES_FILE_CONTAINER "
 fi
 
-if [ -n "$EXTEND_CHR" ]; then
-    CMD+="--extend-allowed-chr $EXTEND_CHR "
+if [ -n $EXTEND_CHR ]; then
+	CMD+="--extend-allowed-chr $EXTEND_CHR "
 fi
 
+echo "Optional paramters: $CMD"
 
-
-
-if [ [ "$singularity_flag" = false ] && [ "$docker_flag" = false ] ] ||  [ "$docker_flag" = true ]; then
+if [ "$docker_flag" = true ]; then
 
 	echo "Running decoil-viz with docker..."
 
+	set -x
 	docker run --platform=linux/amd64 \
-    		-v $REFERENCE:$REFERENCE \
-    		-v $GTF:$GTF \
-    		-v $COVERAGE:$COVERAGE \
-    		-v $BED:$BED \
-    		-v $LINKS:$LINKS \
-    		-v $SUMMARY:$SUMMARY \
-            -v $WINDOW:$WINDOW_FILE_CONTAINER \
-            -v $GENES:$WINDOW_FILE_CONTAINER \
-   	        -v $OUTDIR:$OUTDIR \
-	madagiurgiu25/decoil-viz:${VERSION} decoil-viz \
-    		--coverage $COVERAGE \
-    		--bed $BED \
-    		--links $LINKS \
-    		-r $REFERENCE \
-    		-g $GTF \
-    		-o $OUTDIR \
-    		--summary $SUMMARY \
-    		--name $NAME \
-            $CMD
+		-v $REFERENCE:$REFERENCE \
+		-v $GTF:$GTF \
+		-v $COVERAGE:$COVERAGE \
+		-v $BED:$BED \
+		-v $LINKS:$LINKS \
+		-v $SUMMARY:$SUMMARY \
+		-v $OUTDIR:$OUTDIR \
+	decoil-viz:${VERSION} decoil-viz \
+		--coverage $COVERAGE \
+		--bed $BED \
+		--links $LINKS \
+		-r $REFERENCE \
+		-g $GTF \
+		-o $OUTDIR \
+		--summary $SUMMARY \
+		--name $NAME \
+		$CMD
 
 elif [ "$singularity_flag" = true ]; then
 
 	echo "Running decoil-viz with singularity..."
 
+	set -x
 	singularity run \
 		--bind $OUTDIR:/mnt:rw \
 		--bind $REFERENCE:/tmp/ref.fa \
@@ -229,8 +231,6 @@ elif [ "$singularity_flag" = true ]; then
 		--bind $BED:/mnt/reconstruct.bed \
 		--bind $LINKS:/mnt/reconstruct.links.txt \
 		--bind $SUMMARY:/mnt/summary.txt \
-        -v $WINDOW:$WINDOW_FILE_CONTAINER \
-        -v $GENES:$WINDOW_FILE_CONTAINER \
 	decoil-viz.sif decoil-viz \
 		--coverage /mnt/coverage.bw \
 		--bed /mnt/reconstruct.bed \
@@ -240,6 +240,8 @@ elif [ "$singularity_flag" = true ]; then
 		--summary /mnt/summary.txt \
 		--name $NAME \
 		-o /mnt \
-        $CMD
+		$CMD
 
+else
+	echo "Use either --docker or --singularity as parameter"
 fi
