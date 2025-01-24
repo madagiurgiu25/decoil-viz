@@ -79,21 +79,21 @@ decoil-viz --help
 Commandline usage:
 
 ```commandline
-Usage: decoil-viz [--docker|--singularity|--version|--help] --coverage <coverage_file> --summary <summary_file> --reference <reference_file> --gtf <gtf_file> --bed <bed_file> --links <links_file> --outdir <output_directory> --name <output_name>
+Usage: decoil-viz [--docker|--singularity|--version|--help] --coverage <coverage_file> --summary <summary_file> --reference <reference_file> --annotation-gtf <gtf_file> --bed <bed_file> --links <links_file> --outputdir <output_directory> --name <output_name>
 
 Options:
-	-h,--help	      		Display this help message
-	--version	    		Display version
-	--docker        		Flag: run decoil-viz using docker (set by default if --singularity not active)
-	--singularity			Flag: run decoil-viz using singularity
-	-o,--outdir <output_directory> Output directory (absolute path)
-	--name				Sample name
-	--coverage <coverage_file>	Coverage file in .bw format (absolute path)
-	--bed <bed_file>		Reconstruction regions file in .bed like format (absolute path)
-	--links <links_file>		Reconstruction links file in .txt format (absolute path)
-	--summary <summary_file>	Reconstructions summary (absolute path)
-	-r,--reference <reference_file>	Reference genome in .fasta format (absolute path)
-	-g,--gtf <gtf_file>		Genes annotation file in .gtf format (absolute path)
+        -h,--help                           Display this help message
+        --version                           Display version
+        --docker                            Flag: run decoil-viz using docker (set by default if --singularity not active)
+        --singularity                       Flag: run decoil-viz using singularity
+        -o,--outputdir <output_directory>   Output directory (absolute path)
+        --name                              Sample name
+        --coverage <coverage_file>          Coverage file in .bw format (absolute path)
+        --bed <bed_file>                    Reconstruction regions file in .bed like format (absolute path)
+        --links <links_file>                Reconstruction links file in .txt format (absolute path)
+        --summary <summary_file>            Reconstructions summary (absolute path)
+        -r,--reference <reference_file>     Reference genome in .fasta format (absolute path)
+        -g,--annotation-gtf <gtf_file>      Genes annotation file in .gtf format (absolute path)
 ```
 
 To generate the input files for visualizing the reconstruction threads go to [decoil](https://github.com/madagiurgiu25/decoil-pre).
