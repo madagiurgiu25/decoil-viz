@@ -12,6 +12,8 @@ LINKS=""
 OUTDIR=""
 NAME=""
 WINDOW=""
+GENES=""
+EXTEND_CHR=""
 
 singularity_flag=false
 docker_flag=false
@@ -34,11 +36,15 @@ display_help(){
     echo "	-o,--outputdir <output_directory>   Output directory (absolute path)"
     echo "	--name                              Sample name"
     echo "	--coverage <coverage_file>          Coverage file in .bw format (absolute path)"
-    echo "	--bed <bed_file>                    Reconstruction regions file in .bed like format (absolute path)"
-    echo "	--links <links_file>                Reconstruction links file in .txt format (absolute path)"
+    echo "	--bed <bed_file>                    Reconstruction regions file in BED like format (absolute path)"
+    echo "	--links <links_file>                Reconstruction links file in TXT format (absolute path)"
     echo "	--summary <summary_file>            Reconstructions summary (absolute path)"
     echo "	-r,--reference <reference_file>     Reference genome in .fasta format (absolute path)" 
-    echo "	-g,--annotation-gtf <gtf_file>      Genes annotation file in .gtf format (absolute path)"
+    echo "	-g,--annotation-gtf <gtf_file>      Genes annotation file in GTF format (absolute path)"
+    echo "Optional parameters:"
+    echo "  --genes-file [gene_names_file]      Gene names used for filtering the GTF file"
+    echo "  --window-file [window_file]         BED like file format with the region of interest"
+    echo "  --extend-allowed-chr [anno_list]    List of additional chromosomal annotation (e.g. chrTest,NC_060942.1...)"
 }
 
 
@@ -46,70 +52,78 @@ display_help(){
 while [[ $# -gt 0 ]]; do
      case $1 in
 	--version)
-            pversion=true
-            shift 1
-            ;;
-        -h|--help)
-            phelp=true
-            shift 1
-            ;;
-        --coverage)
-            COVERAGE="$2"
-            shift 2
-            ;;
-        --summary)
-            SUMMARY="$2"
-            shift 2
-            ;;
-        -r|--reference)
-            REFERENCE="$2"
-            shift 2
-            ;;
-        -g|--annotation-gtf)
-            GTF="$2"
-            shift 2
-            ;;
-        --bed)
-            BED="$2"
-            shift 2
-            ;;
-        --links)
-            LINKS="$2"
-            shift 2
-            ;;
-        -o|--outputdir)
-            OUTDIR="$2"
-            shift 2
-            ;;
-        --name)
-            NAME="$2"
-            shift 2
-            ;;
+        pversion=true
+        shift 1
+        ;;
+    -h|--help)
+        phelp=true
+        shift 1
+        ;;
+    --coverage)
+        COVERAGE="$2"
+        shift 2
+        ;;
+    --summary)
+        SUMMARY="$2"
+        shift 2
+        ;;
+    -r|--reference)
+        REFERENCE="$2"
+        shift 2
+        ;;
+    -g|--annotation-gtf)
+        GTF="$2"
+        shift 2
+        ;;
+    --bed)
+        BED="$2"
+        shift 2
+        ;;
+    --links)
+        LINKS="$2"
+        shift 2
+        ;;
+    -o|--outputdir)
+        OUTDIR="$2"
+        shift 2
+        ;;
+    --name)
+        NAME="$2"
+        shift 2
+        ;;
 	--window-file)
 	    WINDOW="$2"
-            shift 2
-            ;;
-         --docker)
-            if [ "$singularity_flag" = true ]; then
-                echo "Error: --docker and --singularity cannot be set at the same time"
-                exit 1
-            fi
-            docker_flag=true
-	    shift 1
-            ;;
-        --singularity)
-            if [ "$docker_flag" = true ]; then
-                echo "Error: --docker and --singularity cannot be set at the same time"
-                exit 1
-            fi
-            singularity_flag=true
-	    shift 1
-            ;;
-	*)
-            echo "Unknown option: $1"
-            print_usage_short
+        shift 2
+        ;;
+    --genes-file)
+	    GENES="$2"
+        shift 2
+        ;;
+    --extend-allowed-chr)
+        EXTEND_CHR="$2"
+        shift 2
+        ;;
+    --docker)
+        if [ "$singularity_flag" = true ]; then
+            echo "Error: --docker and --singularity cannot be set at the same time"
             exit 1
-            ;;
+        fi
+        docker_flag=true
+        shift 1
+        ;;
+    --singularity)
+        if [ "$docker_flag" = true ]; then
+            echo "Error: --docker and --singularity cannot be set at the same time"
+            exit 1
+        fi
+        singularity_flag=true
+        shift 1
+        ;;
+	*)
+        echo "Unknown option: $1"
+        print_usage_short
+        exit 1
+        ;;
     esac
 done
 
@@ -142,6 +156,9 @@ echo "BED file: $BED"
 echo "Links file: $LINKS"
 echo "Output directory: $OUTDIR"
 echo "Output name: $NAME"
+echo "Genes file: $GENES"
+echo "Window file: $WINDOW"
+echo "Extend allowed chr: $EXTEND_CHR"
 
 # List of files to check
 files=($REFERENCE $GTF $COVERAGE $SUMMARY $BED $LINKS)
@@ -156,6 +173,24 @@ for file in "${files[@]}"; do
     fi
 done
 
+CMD=""
+WINDOW_FILE_CONTAINER="/mnt/windowfile.bed"
+GENES_FILE_CONTAINER="/mnt/genes.txt"
+
+if [ -n "$WINDOW" ]; then
+    CMD+="--plot-window $WINDOW_FILE_CONTAINER "
+fi
+
+if [ -n "$GENES" ]; then
+    CMD+="--genes $GENES_FILE_CONTAINER "
+fi
+
+if [ -n "$EXTEND_CHR" ]; then
+    CMD+="--extend-allowed-chr $EXTEND_CHR "
+fi
+
+
+
 
 if [ [ "$singularity_flag" = false ] && [ "$docker_flag" = false ] ] ||  [ "$docker_flag" = true ]; then
 
@@ -168,7 +203,9 @@ if [ [ "$singularity_flag" = false ] && [ "$docker_flag" = false ] ] ||  [ "$doc
     		-v $BED:$BED \
     		-v $LINKS:$LINKS \
     		-v $SUMMARY:$SUMMARY \
-   		-v $OUTDIR:$OUTDIR \
+            -v $WINDOW:$WINDOW_FILE_CONTAINER \
+            -v $GENES:$WINDOW_FILE_CONTAINER \
+   	        -v $OUTDIR:$OUTDIR \
 	madagiurgiu25/decoil-viz:${VERSION} decoil-viz \
     		--coverage $COVERAGE \
     		--bed $BED \
@@ -177,8 +214,8 @@ if [ [ "$singularity_flag" = false ] && [ "$docker_flag" = false ] ] ||  [ "$doc
     		-g $GTF \
     		-o $OUTDIR \
     		--summary $SUMMARY \
-    		--name $NAME
-	
+    		--name $NAME \
+            $CMD
 
 elif [ "$singularity_flag" = true ]; then
 
@@ -192,6 +229,8 @@ elif [ "$singularity_flag" = true ]; then
 		--bind $BED:/mnt/reconstruct.bed \
 		--bind $LINKS:/mnt/reconstruct.links.txt \
 		--bind $SUMMARY:/mnt/summary.txt \
+        -v $WINDOW:$WINDOW_FILE_CONTAINER \
+        -v $GENES:$WINDOW_FILE_CONTAINER \
 	decoil-viz.sif decoil-viz \
 		--coverage /mnt/coverage.bw \
 		--bed /mnt/reconstruct.bed \
@@ -200,6 +239,7 @@ elif [ "$singularity_flag" = true ]; then
 		-g /tmp/anno.gtf \
 		--summary /mnt/summary.txt \
 		--name $NAME \
-		-o /mnt
+		-o /mnt \
+        $CMD
 
 fi
