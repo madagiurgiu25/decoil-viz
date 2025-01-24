@@ -1,5 +1,5 @@
 class CONFIG_R:
-	NODEFILE = 'nodefile'
+	NODEFILE = 'nodesfile'
 	EDGESFILE = 'edgesfile'
 	BW = 'bw'
 	SAMPLE = 'sample'
@@ -22,6 +22,7 @@ class CONFIG_R:
 	WINDOW = 'window'
 	FILTERSCORE = 'filtertop'
 	FILTERTOP = 'filterscore'
+	EXTENDALLOWEDCHR = 'extendallowedchr'
  
 class ENV:
 	IN_CONTAINER = 'IN_CONTAINER'
