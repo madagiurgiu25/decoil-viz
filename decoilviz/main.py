@@ -25,6 +25,7 @@ def run_plot_only(outputdir,
                   linksfile,
                   bigwigfile,
                   summaryfile,
+                  allowedchr="",
                   window="",
                   filterscore="", 
                   filtertop="",
@@ -67,7 +68,8 @@ def run_plot_only(outputdir,
 			  cr.FNAME: suffix,
 			  cr.WINDOW: window,
 			  cr.FILTERSCORE: filterscore,
-			  cr.FILTERTOP: filtertop
+			  cr.FILTERTOP: filtertop,
+              cr.EXTENDALLOWEDCHR: allowedchr
 			  }
 	visualize.report_circles_r(os.path.join(params[cr.ROOT], params[cr.FNAME] + ".html") , params)
 	os.chdir(currpath)
@@ -134,6 +136,7 @@ def main(sysargs=sys.argv[1:]):
                             required=False, default="", type=str)
         parser.add_argument('--full', help='Generate full report', default=True, type=bool)
         parser.add_argument('--genes',help='Path to list of gene names / oncogenes', default="/code/anno/genes.txt", required=False)
+        parser.add_argument('--extend-allowed-chr',help='Extend chromosomal annotation list (e.g. --extend-allowed-chr chr1,chr2)', default="", required=False)
         
         args = parser.parse_args(sysargs)
 
@@ -150,7 +153,12 @@ def main(sysargs=sys.argv[1:]):
                     linksfile=args.links,
                     bigwigfile=args.coverage,
                     summaryfile=args.summary,
-                    suffix=args.suffix)
+                    suffix=args.suffix,
+                    window=args.plot_window,
+                    allowedchr=args.extend_allowed_chr
+                    # filterscore=args.plot_filter_score, 
+                    # filtertop=args.plot_top,
+                    )
 
         print("-------")
         print("Status: Successfully finished")

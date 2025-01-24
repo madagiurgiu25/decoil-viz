@@ -16,4 +16,4 @@ SUMMARY=$ROOT/example/summary.txt
 OUTDIR=$ROOT/example
 NAME=test
 
-decoil-viz --docker --coverage $COVERAGE --summary $SUMMARY --reference $REF --gtf $GTF --bed $BED --links $LINKS --outdir $OUTDIR --name $NAME
+decoil-viz --docker --coverage $COVERAGE --summary $SUMMARY --reference $REF --annotation-gtf $GTF --bed $BED --links $LINKS --outputdir $OUTDIR --name $NAME --extend-allowed-chr chrTest

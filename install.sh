@@ -7,7 +7,7 @@
 #SBATCH --mem=50G
 
 # image version
-VERSION="1.0.3"
+VERSION="1.0.4"
 
 singularity_flag=false
 docker_flag=false
@@ -48,6 +48,7 @@ if [ "$singularity_flag" = true ]; then
 fi
 
 DECOILVIZ=$PWD
+export PATH=$PATH:$DECOILVIZ
 
 # Check if the line is already present in ~/.decoil_profile
 if ! grep -q "$DECOILVIZ" ~/.bashrc; then
