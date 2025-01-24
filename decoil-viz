@@ -177,6 +177,8 @@ for file in "${files[@]}"; do
 done
 
 CMD=""
+WINDOW_FILE_CONTAINER="/mnt/window.bed"
+GENES_FILE_CONTAINER="/mnt/genes.txt"
 
 if [ "${#WINDOW}" -eq 0 ]; then
 	echo ""
@@ -184,17 +186,19 @@ else
 	CMD+="--plot-window $WINDOW_FILE_CONTAINER "
 fi
 
-if [ -n $GENES ]; then
+if [ "${#GENES}" -eq 0 ]; then
 	echo ""
 else
 	CMD+="--genes $GENES_FILE_CONTAINER "
 fi
 
-if [ -n $EXTEND_CHR ]; then
+if [ "${#EXTEND_CHR}" -eq 0 ]; then
+	echo ""
+else
 	CMD+="--extend-allowed-chr $EXTEND_CHR "
 fi
 
-echo "Optional paramters: $CMD"
+echo "Optional parameters: $CMD"
 
 if [ "$docker_flag" = true ]; then
 
