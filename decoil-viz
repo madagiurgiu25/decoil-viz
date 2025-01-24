@@ -2,6 +2,7 @@
 
 # decoil-viz version
 VERSION="1.0.4"
+COMMIT="main 89986ac"
 
 COVERAGE=""
 SUMMARY=""
@@ -29,22 +30,23 @@ display_help(){
 	print_usage_short
 	echo ""
 	echo "Options:"
-	echo "	-h,--help						   Display this help message"
-	echo "	--version						   Display version"
-	echo "	--docker							Flag: run decoil-viz using docker (set by default if --singularity not active)"
-	echo "	--singularity					   Flag: run decoil-viz using singularity"
-	echo "	-o,--outputdir <output_directory>   Output directory (absolute path)"
-	echo "	--name							  Sample name"
-	echo "	--coverage <coverage_file>		  Coverage file in .bw format (absolute path)"
-	echo "	--bed <bed_file>					Reconstruction regions file in BED like format (absolute path)"
-	echo "	--links <links_file>				Reconstruction links file in TXT format (absolute path)"
-	echo "	--summary <summary_file>			Reconstructions summary (absolute path)"
-	echo "	-r,--reference <reference_file>	 Reference genome in .fasta format (absolute path)" 
-	echo "	-g,--annotation-gtf <gtf_file>	  Genes annotation file in GTF format (absolute path)"
+	echo "	-h,--help				Display this help message"
+	echo "	--version				Display version"
+	echo "	--docker				Flag: run decoil-viz using docker (set by default if --singularity not active)"
+	echo "	--singularity				Flag: run decoil-viz using singularity"
+	echo "	-o,--outputdir <output_directory>	Output directory (absolute path)"
+	echo "	--name					Sample name"
+	echo "	--coverage <coverage_file>		Coverage file in .bw format (absolute path)"
+	echo "	--bed <bed_file>			Reconstruction regions file in BED like format (absolute path)"
+	echo "	--links <links_file>			Reconstruction links file in TXT format (absolute path)"
+	echo "	--summary <summary_file>		Reconstructions summary (absolute path)"
+	echo "	-r,--reference <reference_file>		Reference genome in .fasta format (absolute path)" 
+	echo "	-g,--annotation-gtf <gtf_file>		Genes annotation file in GTF format (absolute path)"
+	echo ""
 	echo "Optional parameters:"
-	echo "  --genes-file [gene_names_file]	  Gene names used for filtering the GTF file"
-	echo "  --window-file [window_file]		 BED like file format with the region of interest"
-	echo "  --extend-allowed-chr [anno_list]	List of additional chromosomal annotation (e.g. chrTest,NC_060942.1...)"
+	echo "  --genes-file [gene_names_file]		Gene names used for filtering the GTF file"
+	echo "  --window-file [window_file]			BED like file format with the region of interest"
+	echo "  --extend-allowed-chr [anno_list]		List of additional chromosomal annotation (e.g. chrTest,NC_060942.1...)"
 }
 
 
