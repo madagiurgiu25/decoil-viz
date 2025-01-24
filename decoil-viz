@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # decoil-viz version
-VERSION="1.0.3"
+VERSION="1.0.4"
 
 COVERAGE=""
 SUMMARY=""
@@ -20,25 +20,25 @@ pversion=false
 
 # Function to print usage information
 print_usage_short() {
-    echo "Usage: decoil-viz [--docker|--singularity|--version|--help] --coverage <coverage_file> --summary <summary_file> --reference <reference_file> --gtf <gtf_file> --bed <bed_file> --links <links_file> --outdir <output_directory> --name <output_name>"
+    echo "Usage: decoil-viz [--docker|--singularity|--version|--help] --coverage <coverage_file> --summary <summary_file> --reference <reference_file> --annotation-gtf <gtf_file> --bed <bed_file> --links <links_file> --outputdir <output_directory> --name <output_name>"
 }
 
 display_help(){
     print_usage_short
     echo ""
     echo "Options:"
-    echo "	-h,--help	      		Display this help message"
-    echo "	--version	    		Display version"
-    echo "	--docker        		Flag: run decoil-viz using docker (set by default if --singularity not active)"
-    echo "	--singularity			Flag: run decoil-viz using singularity"
-    echo "	-o,--outdir <output_directory> Output directory (absolute path)"
-    echo "	--name				Sample name"
-    echo "	--coverage <coverage_file>	Coverage file in .bw format (absolute path)"
-    echo "	--bed <bed_file>		Reconstruction regions file in .bed like format (absolute path)"
-    echo "	--links <links_file>		Reconstruction links file in .txt format (absolute path)"
-    echo "	--summary <summary_file>	Reconstructions summary (absolute path)"
-    echo "	-r,--reference <reference_file>	Reference genome in .fasta format (absolute path)" 
-    echo "	-g,--gtf <gtf_file>		Genes annotation file in .gtf format (absolute path)"
+    echo "	-h,--help                           Display this help message"
+    echo "	--version                           Display version"
+    echo "	--docker                            Flag: run decoil-viz using docker (set by default if --singularity not active)"
+    echo "	--singularity                       Flag: run decoil-viz using singularity"
+    echo "	-o,--outputdir <output_directory>   Output directory (absolute path)"
+    echo "	--name                              Sample name"
+    echo "	--coverage <coverage_file>          Coverage file in .bw format (absolute path)"
+    echo "	--bed <bed_file>                    Reconstruction regions file in .bed like format (absolute path)"
+    echo "	--links <links_file>                Reconstruction links file in .txt format (absolute path)"
+    echo "	--summary <summary_file>            Reconstructions summary (absolute path)"
+    echo "	-r,--reference <reference_file>     Reference genome in .fasta format (absolute path)" 
+    echo "	-g,--annotation-gtf <gtf_file>      Genes annotation file in .gtf format (absolute path)"
 }
 
 
@@ -65,7 +65,7 @@ while [[ $# -gt 0 ]]; do
             REFERENCE="$2"
             shift 2
             ;;
-        -g|--gtf)
+        -g|--annotation-gtf)
             GTF="$2"
             shift 2
             ;;
@@ -77,7 +77,7 @@ while [[ $# -gt 0 ]]; do
             LINKS="$2"
             shift 2
             ;;
-        -o|--outdir)
+        -o|--outputdir)
             OUTDIR="$2"
             shift 2
             ;;

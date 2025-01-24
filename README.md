@@ -42,13 +42,13 @@ To download the singularity image:
 With docker:
 
 ```commandline
-decoil-viz --docker --coverage <coverage_file> --summary <summary_file> --reference <reference_file> --gtf <gtf_file> --bed <bed_file> --links <links_file> --outdir <output_directory> --name <output_name>
+decoil-viz --docker --coverage <coverage_file> --summary <summary_file> --reference <reference_file> --annotation-gtf <gtf_file> --bed <bed_file> --links <links_file> --outputdir <output_directory> --name <output_name>
 ```
 
 With singularity:
 
 ```commandline
-decoil-viz --singularity --coverage <coverage_file> --summary <summary_file> --reference <reference_file> --gtf <gtf_file> --bed <bed_file> --links <links_file> --outdir <output_directory> --name <output_name>
+decoil-viz --singularity --coverage <coverage_file> --summary <summary_file> --reference <reference_file> --annotation-gtf <gtf_file> --bed <bed_file> --links <links_file> --outputdir <output_directory> --name <output_name>
 ```
 
 ### Run test example on your machine
