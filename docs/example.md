@@ -107,5 +107,5 @@ And the output is:
 - `gencode.v42.primary_assembly.basic.annotation.gtf` - Genes annotation file 
 - `GRCh38.primary_assembly.genome.fa` - Reference genome
 
-For more details about how these files are generated go to [decoil](https://github.com/madagiurgiu25/decoil-pre)
+For more details about how these files are generated, i.e. how ecDNA reconstruction from sequencing data was performed go to [decoil](https://github.com/madagiurgiu25/decoil-pre)
 
